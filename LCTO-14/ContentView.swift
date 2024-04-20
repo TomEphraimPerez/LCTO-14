@@ -13,7 +13,7 @@ struct ContentView: View {
         ZStack{
         
             VStack() {
-                //Ukr Blue
+                                        //Ukr Blue
                 Color(red: 0.0, green: 0.6, blue: 0.9) // sans .ignoresSafeArea()
                 
                 // HSTACK
@@ -36,9 +36,9 @@ struct ContentView: View {
                         //.frame(width: 210, height: 110)
                     Spacer()
                 }//H
-            
                 
-                //Ukr Yellow
+                
+                                        //Ukr Yellow
                 Color(red: 1.0, green: 1.0, blue: 0.0)//no.ignoresSafeArea()->no diff
                 
                 
@@ -52,13 +52,15 @@ struct ContentView: View {
                 Text("Let's Check This OUT!")
                     .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     .fontWeight(.bold)
-                
+                    .foregroundColor(Color(red: 9.0, green: 0.0, blue: 0.5))
                 
             }//VStack
         }//ZStack
     }//var body
     
 }//struct                                             // opt-sft </> fold/unfold
+
+
 
 
 
