@@ -11,38 +11,35 @@ struct ContentView: View {
     var body: some View {
         
         ZStack{
-            
-            
-            //Color(red: 0.0, green: 0.69, blue: 0.6)
-            
+        
             VStack() {
-                
+                //Ukr Blue
                 Color(red: 0.0, green: 0.6, blue: 0.9) // sans .ignoresSafeArea()
-                                                // HSTACK
+                
+                // HSTACK
                 HStack{
                     // Report button
                     Spacer()
                     Image("2")
                         //.resizable()
                         //.aspectRatio(contentMode: .fit)
-                        .padding(9.0)
+                        //.padding(9.0)
                         //.frame(width: 200, height: 100)
                     
-                    Spacer()
                     
                     // Search button
+                    Spacer()
                     Image("3")
                         //.resizable()
                         //.aspectRatio(contentMode: .fit)
                         //.padding(9.0)
                         //.frame(width: 210, height: 110)
                     Spacer()
-                }
+                }//H
             
                 
-                
-                Color(red: 1.0, green: 1.0, blue: 0.0)//no.ignoresSafeArea() no diff
-                    
+                //Ukr Yellow
+                Color(red: 1.0, green: 1.0, blue: 0.0)//no.ignoresSafeArea()->no diff
                 
                 
                 // Shelves display
@@ -50,16 +47,17 @@ struct ContentView: View {
                     .resizable()
                     .padding(7.0)
                     .opacity(10.0)
-                    //.aspectRatio(contentMode: .fit)   // Can not pad Lt/Rt sides.
+                //.aspectRatio(contentMode: .fit)   // Can not pad Lt/Rt sides.
                     .cornerRadius(44.0)
                 Text("Let's Check This OUT!")
                     .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                     .fontWeight(.bold)
                 
+                
             }//VStack
         }//ZStack
-        
     }//var body
+    
 }//struct                                             // opt-sft </> fold/unfold
 
 
