@@ -11,34 +11,42 @@ struct ContentView: View {
     var body: some View {
         
         VStack() {
+            Color(red: 0.0, green: 0.69, blue: 0.6) // sans .ignoresSafeArea()
             
-            // Report button
-            Image("2")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .padding(9.0)
-                .frame(width: 200, height: 100, alignment: .top)
+                                            // HSTACK
+            HStack{
+                // Report button
+                Spacer()
+                Image("2")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(9.0)
+                    .frame(width: 200, height: 100)
+                
+                Spacer()
+                
+                // Search button
+                Image("3")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .padding(9.0)
+                    .frame(width: 200, height: 100, alignment: .top)
+                Spacer()
+            }
+        
             
-            Spacer()
             
-            // Search button
-            Image("3")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .padding(9.0)
-                .frame(width: 200, height: 100, alignment: .top)
+            Color(red: 0.0, green: 0.69, blue: 0.6) // sans .ignoresSafeArea()
+                
             
-            
-            Color(red: 0.0, green: 0.69, blue: 0.6).ignoresSafeArea()
             
             // Shelves display
             Image("1")
                 .resizable()
-                .padding(9.0)
-            
-                .opacity(1.0)
+                .padding(0.0)
+                .opacity(10.0)
                 .aspectRatio(contentMode: .fit)
-                .cornerRadius(55.0)                             //non-op
+                .cornerRadius(9.0)                             //non-op
             Text("Let's Check This Out")
                 .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
                 .fontWeight(.bold)
