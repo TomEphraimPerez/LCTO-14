@@ -9,11 +9,31 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
+        
         VStack() {
-            Color(red: 0.0, green: 0.69, blue: 0.6)
+            
+            // Report button
+            Image("2")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(9.0)
+                .frame(width: 200, height: 100, alignment: .top)
+            
+            Spacer()
+            
+            Image("3")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .padding(9.0)
+                .frame(width: 200, height: 100, alignment: .top)
+            
+            
+            Color(red: 0.0, green: 0.69, blue: 0.6).ignoresSafeArea()
+            
             Image("1")
                 .resizable()
                 .padding(9.0)
+            
                 .opacity(1.0)
                 .aspectRatio(contentMode: .fit)
                 .cornerRadius(55.0)                             //non-op
@@ -22,12 +42,12 @@ struct ContentView: View {
                 .fontWeight(.bold)
         }
         
-        
+      
         
         
         
     }
-}
+}                   // opt-sft </> fold/unfold
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
