@@ -21,6 +21,7 @@ struct ContentView: View {
             
             Spacer()
             
+            // Search button
             Image("3")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -30,6 +31,7 @@ struct ContentView: View {
             
             Color(red: 0.0, green: 0.69, blue: 0.6).ignoresSafeArea()
             
+            // Shelves display
             Image("1")
                 .resizable()
                 .padding(9.0)
