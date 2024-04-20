@@ -10,57 +10,64 @@ import SwiftUI
 struct ContentView: View {
     var body: some View {
         
-        VStack() {
-            Color(red: 0.0, green: 0.69, blue: 0.6) // sans .ignoresSafeArea()
+        ZStack{
             
-                                            // HSTACK
-            HStack{
-                // Report button
-                Spacer()
-                Image("2")
+            
+            //Color(red: 0.0, green: 0.69, blue: 0.6)
+            
+            VStack() {
+                
+                Color(red: 0.0, green: 0.6, blue: 0.9) // sans .ignoresSafeArea()
+                                                // HSTACK
+                HStack{
+                    // Report button
+                    Spacer()
+                    Image("2")
+                        //.resizable()
+                        //.aspectRatio(contentMode: .fit)
+                        .padding(9.0)
+                        //.frame(width: 200, height: 100)
+                    
+                    Spacer()
+                    
+                    // Search button
+                    Image("3")
+                        //.resizable()
+                        //.aspectRatio(contentMode: .fit)
+                        //.padding(9.0)
+                        //.frame(width: 210, height: 110)
+                    Spacer()
+                }
+            
+                
+                
+                Color(red: 1.0, green: 1.0, blue: 0.0)//no.ignoresSafeArea() no diff
+                    
+                
+                
+                // Shelves display
+                Image("1")
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding(9.0)
-                    .frame(width: 200, height: 100)
+                    .padding(7.0)
+                    .opacity(10.0)
+                    //.aspectRatio(contentMode: .fit)   // Can not pad Lt/Rt sides.
+                    .cornerRadius(44.0)
+                Text("Let's Check This OUT!")
+                    .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
+                    .fontWeight(.bold)
                 
-                Spacer()
-                
-                // Search button
-                Image("3")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .padding(9.0)
-                    .frame(width: 200, height: 100, alignment: .top)
-                Spacer()
-            }
+            }//VStack
+        }//ZStack
         
-            
-            
-            Color(red: 0.0, green: 0.69, blue: 0.6) // sans .ignoresSafeArea()
-                
-            
-            
-            // Shelves display
-            Image("1")
-                .resizable()
-                .padding(0.0)
-                .opacity(10.0)
-                .aspectRatio(contentMode: .fit)
-                .cornerRadius(9.0)                             //non-op
-            Text("Let's Check This Out")
-                .font(/*@START_MENU_TOKEN@*/.title/*@END_MENU_TOKEN@*/)
-                .fontWeight(.bold)
-        }
-        
-      
-        
-        
-        
-    }
-}                   // opt-sft </> fold/unfold
+    }//var body
+}//struct                                             // opt-sft </> fold/unfold
+
+
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
+
+
