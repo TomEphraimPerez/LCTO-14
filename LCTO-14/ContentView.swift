@@ -18,6 +18,7 @@ struct ContentView: View {
        
                 
                                         // HSTACK
+                
                 HStack{
                                         // Report button
                     Spacer()
@@ -26,10 +27,17 @@ struct ContentView: View {
                         //.aspectRatio(contentMode: .fit)
                         //.padding(9.0)
                         //.frame(width: 200, height: 100)
+                    /*
                     Button("Report") {
                         Report()
                     }.foregroundColor(.black)
-                    
+                     */
+                    Button {
+                        Report()
+                    } label: {
+                        Image("2")
+                    }
+
                     
                                         // Search button
                     Spacer()
@@ -38,9 +46,18 @@ struct ContentView: View {
                         //.aspectRatio(contentMode: .fit)
                         //.padding(9.0)
                         //.frame(width: 210, height: 110)
+                    /*
                     Button("Search") {
                         Report()
                     }.foregroundColor(.black)
+                    */
+                    Button {
+                        Search()
+                    } label: {
+                        Image("3")
+                    }
+
+                    
                     Spacer()
                 }//H
                 
