@@ -21,12 +21,15 @@ struct ContentView: View {
                 HStack{
                     // Report button
                     Spacer()
-                    Image("2")
+                    //Image("2")
                         //.resizable()
                         //.aspectRatio(contentMode: .fit)
                         //.padding(9.0)
                         //.frame(width: 200, height: 100)
-                    
+                    Button("Report") {
+                        print("Check console out for (testPreport) stub")
+                    }
+
                     
                     // Search button
                     Spacer()
