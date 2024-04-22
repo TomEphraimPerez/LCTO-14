@@ -33,11 +33,14 @@ struct ContentView: View {
                     
                                         // Search button
                     Spacer()
-                    Image("3")
+                    //Image("3")
                         //.resizable()
                         //.aspectRatio(contentMode: .fit)
                         //.padding(9.0)
                         //.frame(width: 210, height: 110)
+                    Button("Search") {
+                        Report()
+                    }.foregroundColor(.black)
                     Spacer()
                 }//H
                 
@@ -77,8 +80,14 @@ struct ContentView: View {
         }//ZStack
     }//var body
     
+    
+    
     func Report(){
         print("Console out should have string 'Report'")
+    }
+    
+    func Search(){
+        print("Console out should have string 'Search'")
     }
     
 }//struct                                             // opt-sft </> fold/unfold
