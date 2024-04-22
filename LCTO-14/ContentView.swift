@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    var body: some View {
+    var body: some View {   // Place cursor under 'body' to code-fold to see better
         
         ZStack{
             
@@ -17,9 +17,9 @@ struct ContentView: View {
                 Color(red: 0.0, green: 0.6, blue: 0.9) // sans .ignoresSafeArea()
        
                 
-                // HSTACK
+                                        // HSTACK
                 HStack{
-                    // Report button
+                                        // Report button
                     Spacer()
                     //Image("2")
                         //.resizable()
@@ -27,11 +27,11 @@ struct ContentView: View {
                         //.padding(9.0)
                         //.frame(width: 200, height: 100)
                     Button("Report") {
-                        print("Check console out for (testPreport) stub")
-                    }
-
+                        Report()
+                    }.foregroundColor(.black)
                     
-                    // Search button
+                    
+                                        // Search button
                     Spacer()
                     Image("3")
                         //.resizable()
@@ -41,9 +41,11 @@ struct ContentView: View {
                     Spacer()
                 }//H
                 
+                    
                 
                                         //Ukr Yellow
                 Color(red: 1.0, green: 1.0, blue: 0.0)//no.ignoresSafeArea()->no diff
+                
                 
                 
                                         // Shelves display
@@ -74,6 +76,10 @@ struct ContentView: View {
             }//VStack
         }//ZStack
     }//var body
+    
+    func Report(){
+        print("Console out should have string 'Report'")
+    }
     
 }//struct                                             // opt-sft </> fold/unfold
 
