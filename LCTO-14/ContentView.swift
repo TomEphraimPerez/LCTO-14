@@ -9,13 +9,15 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {   // Place cursor under 'body' to code-fold to see better
-        
+         
+                                        // ZStack
         ZStack{
             
             VStack() {
                                         //Ukr Blue
                 Color(red: 0.0, green: 0.6, blue: 0.9) // sans .ignoresSafeArea()
        
+                
                 
                                         // HSTACK
                 
@@ -37,7 +39,6 @@ struct ContentView: View {
                     } label: {
                         Image("2")
                     }
-
                     
                                         // Search button
                     Spacer()
@@ -63,7 +64,7 @@ struct ContentView: View {
                 
                     
                 
-                                        //Ukr Yellow
+                                        // Ukr Yellow
                 Color(red: 1.0, green: 1.0, blue: 0.0)//no.ignoresSafeArea()->no diff
                 
                 
