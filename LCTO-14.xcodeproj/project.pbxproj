@@ -13,6 +13,20 @@
 		FF88E9182BD0919F008C24D1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF88E9172BD0919F008C24D1 /* Preview Assets.xcassets */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXBuildRule section */
+		FF3333A02BE542D500FB0638 /* PBXBuildRule */ = {
+			isa = PBXBuildRule;
+			compilerSpec = com.apple.compilers.proxy.script;
+			fileType = pattern.proxy;
+			inputFiles = (
+			);
+			isEditable = 1;
+			outputFiles = (
+			);
+			script = "# Type a script or drag a script file from your workspace to insert its path.\n";
+		};
+/* End PBXBuildRule section */
+
 /* Begin PBXFileReference section */
 		FF88E90D2BD0919E008C24D1 /* LCTO-14.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LCTO-14.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF88E9102BD0919E008C24D1 /* LCTO_14App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LCTO_14App.swift; sourceTree = "<group>"; };
@@ -81,6 +95,7 @@
 				FF88E90B2BD0919E008C24D1 /* Resources */,
 			);
 			buildRules = (
+				FF3333A02BE542D500FB0638 /* PBXBuildRule */,
 			);
 			dependencies = (
 			);
@@ -270,6 +285,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LCTO-14/Preview Content\"";
+				DEVELOPMENT_TEAM = C3UM93CB4Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
@@ -300,6 +316,7 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"LCTO-14/Preview Content\"";
+				DEVELOPMENT_TEAM = C3UM93CB4Q;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
