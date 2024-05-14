@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FF3333A22BF2C59900FB0638 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF3333A12BF2C59900FB0638 /* ViewModel.swift */; };
 		FF88E9112BD0919E008C24D1 /* LCTO_14App.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF88E9102BD0919E008C24D1 /* LCTO_14App.swift */; };
 		FF88E9132BD0919E008C24D1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF88E9122BD0919E008C24D1 /* ContentView.swift */; };
 		FF88E9152BD0919F008C24D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF88E9142BD0919F008C24D1 /* Assets.xcassets */; };
@@ -28,6 +29,7 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXFileReference section */
+		FF3333A12BF2C59900FB0638 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		FF88E90D2BD0919E008C24D1 /* LCTO-14.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LCTO-14.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		FF88E9102BD0919E008C24D1 /* LCTO_14App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LCTO_14App.swift; sourceTree = "<group>"; };
 		FF88E9122BD0919E008C24D1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 				FF88E9142BD0919F008C24D1 /* Assets.xcassets */,
 				FF88E9192BD0919F008C24D1 /* LCTO_14.entitlements */,
 				FF88E9162BD0919F008C24D1 /* Preview Content */,
+				FF3333A12BF2C59900FB0638 /* ViewModel.swift */,
 			);
 			path = "LCTO-14";
 			sourceTree = "<group>";
@@ -155,6 +158,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FF88E9132BD0919E008C24D1 /* ContentView.swift in Sources */,
+				FF3333A22BF2C59900FB0638 /* ViewModel.swift in Sources */,
 				FF88E9112BD0919E008C24D1 /* LCTO_14App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
