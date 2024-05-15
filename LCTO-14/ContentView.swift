@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    //@EnvironmentObject var vm: ViewModel
+
     //try;
     @EnvironmentObject var viewModel: ViewModel
     //blw OK?
@@ -38,6 +38,13 @@ struct ContentView: View {
                         Image("2")
                     }
                     */
+                    /*                                  // sim launched ok exc for bottons. Need to use MY buttons. 5-15-24)1338
+                    Button("Report") {
+                        let productName = "Sample Product"
+                        let comment = "Great product!"
+                        viewModel.postComment(productName: productName, comment: comment)
+                    }
+                    */
                     Button("Report") {
                         let productName = "Sample Product"
                         let comment = "Great product!"
@@ -54,11 +61,20 @@ struct ContentView: View {
                     } label: {
                         Image("3")
                     }
-                    */
+                    */                                  // sim launched ok exc for bottons. Need to use MY buttons. 5-15-24)1338
+                    /*
                     Button("Search") {
                         let productName = "Sample Product"
                         viewModel.fetchComments(for: productName) { comments in
                             // Update the UI to show fetched comments
+                            print(comments)
+                        }
+                    }
+                    */
+                    Button("Search") {
+                        let productName = "Sample Product"
+                        viewModel.fetchComments(for: productName) { comments in
+                                                        // Update the UI to show fetched comments
                             print(comments)
                         }
                     }

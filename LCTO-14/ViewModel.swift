@@ -19,7 +19,7 @@ import CloudKit
 //  -   -   -   -
 //                                                              REPORT !
 
-@MainActor
+//@MainActor                                                        // Commented out 5-15-24)1433
 final class ViewModel: ObservableObject {
     
     
@@ -39,14 +39,14 @@ final class ViewModel: ObservableObject {
     }
     
     
-    //                                                              SEARCH O--
+    //                                                          SEARCH O--
     
     func fetchComments(for productName: String, completion: @escaping ([String]) -> Void) {
         let predicate = NSPredicate(format: "productName == %@", productName)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
         
         let database = CKContainer.default().publicCloudDatabase
-        database.perform(query, inZoneWith: nil) { records, error in                //o deprecated
+        database.perform(query, inZoneWith: nil) { records, error in //o deprecated
             // use; fetch(withQuery:inZoneWith:desiredKeys:resultsLimit:completionHandler:)
             
             if let error = error {
