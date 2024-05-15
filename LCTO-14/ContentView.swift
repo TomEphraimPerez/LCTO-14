@@ -8,13 +8,19 @@
 import SwiftUI
 
 struct ContentView: View {
+    //@EnvironmentObject var vm: ViewModel
+    //try;
+    @EnvironmentObject var viewModel: ViewModel
+    //blw OK?
+    //@ObservedObject var viewModel: ViewModel  // assuming ViewModel conforms to ObservableObject
+    
     var body: some View {   // Place cursor under 'body' to code-fold to see better
          
                                         // ZStack
         ZStack{
             
-            VStack() {
-                                        //Ukr Blue
+            VStack() {                  // VStack
+                                        // Ukr Blue
                 Color(red: 0.0, green: 0.6, blue: 0.9) // sans .ignoresSafeArea()
        
                 
@@ -24,40 +30,38 @@ struct ContentView: View {
                 HStack{
                                         // Report button
                     Spacer()
-                    //Image("2")
-                        //.resizable()
-                        //.aspectRatio(contentMode: .fit)
-                        //.padding(9.0)
-                        //.frame(width: 200, height: 100)
+                    
                     /*
-                    Button("Report") {
-                        Report()
-                    }.foregroundColor(.black)
-                     */
                     Button {
                         Report()
                     } label: {
                         Image("2")
                     }
+                    */
+                    Button("Report") {
+                        let productName = "Sample Product"
+                        let comment = "Great product!"
+                        viewModel.postComment(productName: productName, comment: comment)
+                    }
+                    
                     
                                         // Search button
                     Spacer()
-                    //Image("3")
-                        //.resizable()
-                        //.aspectRatio(contentMode: .fit)
-                        //.padding(9.0)
-                        //.frame(width: 210, height: 110)
+                    
                     /*
-                    Button("Search") {
-                        Report()
-                    }.foregroundColor(.black)
-                    */
                     Button {
                         Search()
                     } label: {
                         Image("3")
                     }
-
+                    */
+                    Button("Search") {
+                        let productName = "Sample Product"
+                        viewModel.fetchComments(for: productName) { comments in
+                            // Update the UI to show fetched comments
+                            print(comments)
+                        }
+                    }
                     
                     Spacer()
                 }//H
@@ -99,7 +103,7 @@ struct ContentView: View {
     }//var body
     
     
-    
+    /*
     func Report(){
         print("Console out should have string 'Report'")
     }
@@ -107,17 +111,17 @@ struct ContentView: View {
     func Search(){
         print("Console out should have string 'Search'")
     }
-    
+    */
 }//struct                                             // opt-sft </> fold/unfold
 
 
 
 
-
+/*      ?   ?   ?
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
-
+*/
 
