@@ -46,7 +46,7 @@ final class ViewModel: ObservableObject {
         let predicate = NSPredicate(format: "productName == %@", productName)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
         
-        let database = CKContainer.default().publicCloudDatabase    //xxxxxxxxxxxxxxxxxxxxxxxxxxx | SAME error as li31 error msg.
+        let database = CKContainer.default().publicCloudDatabase    
         database.perform(query, inZoneWith: nil) { records, error in //o Deprecated error.
             // use; fetch(withQuery:inZoneWith:desiredKeys:resultsLimit:completionHandler:)
             
@@ -67,7 +67,7 @@ final class ViewModel: ObservableObject {
         let predicate = NSPredicate(format: "productName == %@", productName)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
         
-        let database = CKContainer.default().publicCloudDatabase    //xxxxxxxxxxxxxxxxxxxxxxxxxxx | SAME error as li31 error msg.
+        let database = CKContainer.default().publicCloudDatabase
         database.perform(query, inZoneWith: nil) { records, error in //o Deprecated error.
             // use; fetch(withQuery:inZoneWith:desiredKeys:resultsLimit:completionHandler:)
             

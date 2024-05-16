@@ -37,6 +37,7 @@ struct ContentView: View {
                     } label: {
                         Image("2")
                     }
+                     
                     */
                     /*                                  // sim launched ok exc for bottons. Need to use MY buttons. 5-15-24)1338
                     Button("Report") {
@@ -45,10 +46,12 @@ struct ContentView: View {
                         viewModel.postComment(productName: productName, comment: comment)
                     }
                     */
-                    Button("Report") {
+                    Button {
                         let productName = "Sample Product"
                         let comment = "Great product!"
                         viewModel.postComment(productName: productName, comment: comment)
+                    } label: {
+                        Image("2")
                     }
                     
                     
@@ -71,12 +74,14 @@ struct ContentView: View {
                         }
                     }
                     */
-                    Button("Search") {
+                    Button {
                         let productName = "Sample Product"
                         viewModel.fetchComments(for: productName) { comments in
                                                         // Update the UI to show fetched comments
                             print(comments)
                         }
+                    } label: {
+                        Image("3")
                     }
                     
                     Spacer()
