@@ -40,7 +40,28 @@ final class ViewModel: ObservableObject {
     }
     
     
-    //                                                          SEARCH O--
+    //                                                          SEARCH O-- o_riginal fr CGPT. Test change on 5-16-24)1122
+/*
+    func fetchComments(for productName: String, completion: @escaping ([String]) -> Void) {
+        let predicate = NSPredicate(format: "productName == %@", productName)
+        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+        
+        let database = CKContainer.default().publicCloudDatabase    //xxxxxxxxxxxxxxxxxxxxxxxxxxx | SAME error as li31 error msg.
+        database.perform(query, inZoneWith: nil) { records, error in //o Deprecated error.
+            // use; fetch(withQuery:inZoneWith:desiredKeys:resultsLimit:completionHandler:)
+            
+            if let error = error {
+                print("Failed to fetch comments: \(error.localizedDescription)")
+                completion([])
+            } else {
+                let comments = records?.compactMap { $0["comment"] as? String } ?? []
+                completion(comments)
+            } //else
+        } //db
+    } //func
+*/
+    
+//                                                              SEARCH O-- Test <fetchComments> below. 5-16-24)1140
     
     func fetchComments(for productName: String, completion: @escaping ([String]) -> Void) {
         let predicate = NSPredicate(format: "productName == %@", productName)
