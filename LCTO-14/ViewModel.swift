@@ -19,7 +19,7 @@ import CloudKit
 //  -   -   -   -
 //                                                              REPORT !
 
-//@MainActor                                                        // Commented out 5-15-24)1433
+//@MainActor                                                        // Commented out 5-15-24)1433, OW Build fails and no Sim.
 final class ViewModel: ObservableObject {
     
     
@@ -28,7 +28,8 @@ final class ViewModel: ObservableObject {
         record["productName"] = productName
         record["comment"] = comment
         
-        let database = CKContainer.default().publicCloudDatabase
+        let database = CKContainer.default().publicCloudDatabase    //xxxxxxxxxxxxxxxxxxxxxxxxxxx >>>
+                        // >>> Thread 1: EXC_BREAKPOINT (code=1, subcode=0x184c69410) | Same error when selecting SEARCH button.
         database.save(record) { record, error in
             if let error = error {
                 print("An error occurred: \(error.localizedDescription)")
@@ -45,8 +46,8 @@ final class ViewModel: ObservableObject {
         let predicate = NSPredicate(format: "productName == %@", productName)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
         
-        let database = CKContainer.default().publicCloudDatabase
-        database.perform(query, inZoneWith: nil) { records, error in //o deprecated
+        let database = CKContainer.default().publicCloudDatabase    //xxxxxxxxxxxxxxxxxxxxxxxxxxx | SAME error as li31 error msg.
+        database.perform(query, inZoneWith: nil) { records, error in //o Deprecated error.
             // use; fetch(withQuery:inZoneWith:desiredKeys:resultsLimit:completionHandler:)
             
             if let error = error {

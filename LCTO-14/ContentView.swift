@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-
+    
     //try;
     @EnvironmentObject var viewModel: ViewModel
     //blw OK?
