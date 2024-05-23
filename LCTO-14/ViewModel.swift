@@ -6,81 +6,72 @@
 //
 
 import Foundation                                               //o
-
-//  -   -   -   -   -   -   -   -   -
-//
-//  ViewModel.swift
-//  (cloudkit-samples) queries
-//
-//  -   -   -   -
-import os.log
 import CloudKit
+import os.log
 
-//  -   -   -   -
-//                                                              REPORT !
-
-//@MainActor                                                        // Commented out 5-15-24)1433, OW Build fails and no Sim.
 final class ViewModel: ObservableObject {
-    
-    
+    @Published var userInput: String = ""  // This will store the user's input from the text field
+
+    private var database: CKDatabase {
+        return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase
+    }
+
     func postComment(productName: String, comment: String) {
         let record = CKRecord(recordType: "ProductComment")
         record["productName"] = productName
         record["comment"] = comment
         
-        let database = CKContainer.default().publicCloudDatabase    //xxxxxxxxxxxxxxxxxxxxxxxxxxx >>>
-                        // >>> Thread 1: EXC_BREAKPOINT (code=1, subcode=0x184c69410) | Same error when selecting SEARCH button.
         database.save(record) { record, error in
-            if let error = error {
-                print("An error occurred: \(error.localizedDescription)")
-            } else {
-                print("Comment posted successfully!")
+            DispatchQueue.main.async {
+                if let error = error {
+                    self.handleError(error)
+                } else {
+                    print("Comment posted successfully!")
+                    self.userInput = ""  // Clear the input after posting
+                }
+            }
+        }
+    }
+    /*
+    private func handleError(_ error: Error) {
+        // Error handling code here
+        print("An error occurred: \(error.localizedDescription)")
+    }
+    */
+    
+    
+    
+    func fetchComments(for productName: String, completion: @escaping ([String]) -> Void) {
+        let predicate = NSPredicate(format: "productName == %@", productName)
+        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+        
+        database.perform(query, inZoneWith: nil) { [weak self] records, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self?.handleError(error)
+                    completion([])
+                } else {
+                    let comments = records?.compactMap { $0["comment"] as? String } ?? []
+                    completion(comments)
+                }
             }
         }
     }
     
     
-    //                                                          SEARCH O-- o_riginal fr CGPT. Test change on 5-16-24)1122
-/*
-    func fetchComments(for productName: String, completion: @escaping ([String]) -> Void) {
-        let predicate = NSPredicate(format: "productName == %@", productName)
-        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
-        
-        let database = CKContainer.default().publicCloudDatabase    
-        database.perform(query, inZoneWith: nil) { records, error in //o Deprecated error.
-            // use; fetch(withQuery:inZoneWith:desiredKeys:resultsLimit:completionHandler:)
-            
-            if let error = error {
-                print("Failed to fetch comments: \(error.localizedDescription)")
-                completion([])
-            } else {
-                let comments = records?.compactMap { $0["comment"] as? String } ?? []
-                completion(comments)
-            } //else
-        } //db
-    } //func
-*/
-    
-//                                                              SEARCH O-- Test <fetchComments> below. 5-16-24)1140
-    
-    func fetchComments(for productName: String, completion: @escaping ([String]) -> Void) {
-        let predicate = NSPredicate(format: "productName == %@", productName)
-        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
-        
-        let database = CKContainer.default().publicCloudDatabase
-        database.perform(query, inZoneWith: nil) { records, error in //o Deprecated error.
-            // use; fetch(withQuery:inZoneWith:desiredKeys:resultsLimit:completionHandler:)
-            
-            if let error = error {
-                print("Failed to fetch comments: \(error.localizedDescription)")
-                completion([])
-            } else {
-                let comments = records?.compactMap { $0["comment"] as? String } ?? []
-                completion(comments)
-            } //else
-        } //db
-    } //func
-    
-} // final class
-//  -   -   -   -   -   -   -   -   -
+    private func handleError(_ error: Error) {
+        guard let ckError = error as? CKError else {
+            print("Error: \(error.localizedDescription)")
+            return
+        }
+
+        switch ckError.code {
+        case .networkUnavailable, .networkFailure:
+            print("Network error: Please check your internet connection.")
+        default:
+            print("Error: \(ckError.localizedDescription)")
+        }
+    }
+}
+
 
