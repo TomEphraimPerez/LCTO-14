@@ -13,11 +13,13 @@ import os.log
 
 final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Published to create observable objs. Exposes VM props for V UI.
     @Published var userInput: String = ""                       // This will store the user's input from the text field
-
+    @Published var userInput2: String = ""
+    
     private var database: CKDatabase {
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase
     }
 
+    /*                                                          // O but from 5-23-24)1834
     func postComment(productName: String, comment: String) {
         let record = CKRecord(recordType: "ProductComment")
         record["productName"] = productName
@@ -30,6 +32,24 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
                 } else {
                     print("Comment posted successfully!")
                     self.userInput = ""                         // Clear the input after posting
+                }
+            }
+        }
+    }
+    */
+    func postComment(productName: String, comment: String) {
+        let record = CKRecord(recordType: "ProductComment")
+        record["productName"] = productName
+        record["comment"] = comment
+        
+        database.save(record) { record, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self.handleError(error)
+                } else {
+                    print("Product and Comment posted successfully!")
+                    self.userInput = ""                         // Clear the input after posting
+                    self.userInput2 = ""
                 }
             }
         }

@@ -12,7 +12,9 @@ import SwiftUI                                          // Already present in LT
 struct ContentView: View {
     @EnvironmentObject var viewModel: ViewModel         // Make sure ViewModel is provided as an environment object
     
-    var body: some View {
+    
+/*
+    var body: some View {                               // O but from Th 5-23-24)1815
         ZStack {
             VStack {
                 Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
@@ -33,7 +35,42 @@ struct ContentView: View {
                 Spacer()
             }
         }
-    }
+    } //var body
+*/
+    var body: some View {
+        ZStack {
+            VStack {
+                Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
+                
+                TextField("Enter your comment here...", text: $viewModel.userInput) // Binding the text field to the ViewModel's userInput
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                TextField("Enter the product here...", text: $viewModel.userInput2) // Binding the text field to the ViewModel's userInput
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                Button("Post Comment") {                            //xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXX
+                    let productName = viewModel.userInput           // This should be dynamic based on your app's needs
+                    let comment = viewModel.userInput2
+                    viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2)
+                    
+                    
+                    //viewModel.postComment(comment: comment, viewModel.userInput2)
+                }
+                .padding()
+                .foregroundColor(.white)
+                .background(Color.blue)
+                .cornerRadius(10)
+                
+                Spacer()
+            }
+        }
+    } //var body
+
+    
+        
+    
 }
 
 /*
