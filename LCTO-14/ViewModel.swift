@@ -19,7 +19,7 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase
     }
 
-    /*                                                          // O but from 5-23-24)1834
+   
     func postComment(productName: String, comment: String) {
         let record = CKRecord(recordType: "ProductComment")
         record["productName"] = productName
@@ -30,36 +30,14 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
                 if let error = error {
                     self.handleError(error)
                 } else {
-                    print("Comment posted successfully!")
-                    self.userInput = ""                         // Clear the input after posting
-                }
-            }
-        }
-    }
-    */
-    func postComment(productName: String, comment: String) {
-        let record = CKRecord(recordType: "ProductComment")
-        record["productName"] = productName
-        record["comment"] = comment
-        
-        database.save(record) { record, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.handleError(error)
-                } else {
-                    print("Product and Comment posted successfully!")
+                    print("Product and Comment posted successfully!")   // prints to console
                     self.userInput = ""                         // Clear the input after posting
                     self.userInput2 = ""
                 }
             }
         }
     }
-    /*
-    private func handleError(_ error: Error) {
-        // Error handling code here
-        print("An error occurred: \(error.localizedDescription)")
-    }
-    */
+ 
     
     
     
