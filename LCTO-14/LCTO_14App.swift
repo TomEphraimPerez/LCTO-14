@@ -1,7 +1,8 @@
 //
 //  LCTO_14App.swift
 //  LCTO-14
-//
+// See LCTO-14.txt
+
 //  Created by thomasperez on 4/17/24. | Swift 5. in toplevel LCTO-14 /LCTO-14.xcodeproj/Build_settings/Swift_compiler_Lang/..ver
 //  For future customer updates/downloads fr AppStore, check their OS version vs my deployment target:
 /*
