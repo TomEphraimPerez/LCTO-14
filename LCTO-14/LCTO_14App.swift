@@ -38,16 +38,16 @@ struct LCTO_14App: App {
 
  // SO TRY - according to https://chatgpt.com/c/e169c3d8-c57b-4a51-bdef-6170294850d3 in
    // "If Using @EnvironmentObject" § toward the end.
-import SwiftUI
+import SwiftUI                                              // Already present in CV.swift
 
 @main
 struct LCTO_14App: App {
-    var viewModel = ViewModel()  // Create a ViewModel instance
+    var viewModel = ViewModel()                             // Create a ViewModel instance
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(viewModel)  // Provide ViewModel as an environment object
+                .environmentObject(viewModel)               // Provides ViewModel as an environment object
         }
     }
 }

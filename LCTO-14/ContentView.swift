@@ -3,12 +3,14 @@
 //  LCTO-14
 //
 //  Created by thomasperez on 4/17/24.
-//
+// CV is UI
+// "MODEL" is BUSINESS_LOGIC and DATA_MODEL
+// See LCTO-14.txt
 
-import SwiftUI
+import SwiftUI                                          // Already present in LTCO_14App.swift
 
 struct ContentView: View {
-    @EnvironmentObject var viewModel: ViewModel  // Make sure ViewModel is provided as an environment object
+    @EnvironmentObject var viewModel: ViewModel         // Make sure ViewModel is provided as an environment object
     
     var body: some View {
         ZStack {
@@ -19,7 +21,7 @@ struct ContentView: View {
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
-                Button("Post Comment") {
+                Button("Post Comment") {//xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxXXXXXXXXXXXX
                     let productName = "Sample Product"  // This should be dynamic based on your app's needs
                     viewModel.postComment(productName: productName, comment: viewModel.userInput)
                 }
