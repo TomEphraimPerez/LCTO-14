@@ -7,7 +7,6 @@
 // CV is UI
 // "MODEL" is BUSINESS_LOGIC and DATA_MODEL
 
-
 import SwiftUI                                          // Already present in LTCO_14App.swift
 
 struct ContentView: View {
@@ -15,10 +14,11 @@ struct ContentView: View {
 
     var body: some View {
         ZStack {
+            Color.white.ignoresSafeArea()  // Ensures the background covers all areas
             VStack {
                                     // POST                 // POST                 // POST
                 
-                Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
+                //Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
                 
                 TextField("Enter the product here...", text: $viewModel.userInput) // .userInput2 !
                     .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -34,65 +34,75 @@ struct ContentView: View {
                     viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2)
                 }
                 .padding()
-                .foregroundColor(.white)
                 .background(Color.blue)
+                .foregroundColor(.white)
                 .cornerRadius(10)
                 
                 Spacer()
+                                
+                
                 
                 
                 //  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
                 
                 
-                                    // SEARCH            5-23-24)1925   // SEARCH               // SEARCH
                 
-                Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
+                                    // SEARCH     // CGPT 5-24-24)1600 search obj wh has a comment  // SEARCH               // SEARCH
+                
+                //Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
                 
                 TextField("Search for the product here...", text: $viewModel.userInput3) // Binding the text field to the ViewModel's userInput
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
-                /*
-                TextField("Take picture for search here...", text: $viewModel.userInpu4) // Binding the text field to the ViewModel's userInput
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                */
-                
-                
-                
-                /*                                      HAD TO ASK CGPT 5-24-24)1511
-                Button("Search Product") {
-                    //XXX let productName = viewModel.userInput3 //This s/b dynamic based ur app's needs. !X!X ur re-defining prodNam see li32!
-                /*
-                    let comment = viewModel.userInput4                                  // Reserve for pix
-                */                                                                      // reefinition ??
-                    let productName = viewModel.userInput3
-                    // viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2)   >>>
-                    viewModel.fetchProductNames(productName: viewModel.userInput3)                                          // <<< XXXXXXXXX
+              
+                Button("Search Product") {                                              // CGPT 5-24-24)1600 search obj wh has a comment
+                    viewModel.fetchProductNames(searchTerm: viewModel.userInput3)
+                                                            // Handle the fetched product names, e.g., update some state to display them
                 }
-                */
-                //                                              >>>
-                Button("Search Product") {                                              // CGPT 5-24-24)1520
-                    viewModel.fetchProductNames(searchTerm: viewModel.userInput3) { productNames in
-                        // Handle the fetched product names, e.g., update some state to display them
-                        print(productNames)
-                    }
-                }
-
-                
-                
                 .padding()
                 .foregroundColor(.white)
                 .background(Color.blue)
                 .cornerRadius(10)
                 
-                Spacer()
-                
-                
-                
+                // Displaying search results
+                if !viewModel.searchResults.isEmpty {
+                    // Display search results
+                    List(viewModel.searchResults, id: \.self) { productName in
+                        Text(productName)
+                    }
+                    .frame(maxHeight: 200)  // Ensures the list is not too tall
+                    //.border(Color.blue, width: 1)               // Optional: adds a border around the search results area
+                    
+                    /*                                              // USE LATER 5-24-24)2026
+                    ScrollView {
+                        VStack(alignment: .leading) {
+                            ForEach(viewModel.searchResults, id: \.self) { productName in
+                                Text(productName)
+                                    .padding()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                    .background(Color.gray.opacity(0.3)) // Light gray background for each item
+                                    .cornerRadius(5)
+                            }
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: 50)
+                    .border(Color.blue, width: 1) // Optional: adds a border around the search results area
+                    
+                    .onReceive(viewModel.$searchResults) { _ in
+                        print("\nSearch results updated: \(viewModel.searchResults)")
+                    }
+                    */
+                   
+                    
+                } else {
+                    Text("\nNo results found")
+                        .font(.headline)
+                        //.padding()
+                }
+                //Spacer()                                                              // Er= extra arg in call
             } // VStk
         } // ZStk
     } //var body
-    
-}
+} // struct                                           // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
 
 

@@ -28,7 +28,7 @@ struct LCTO_14App: App {
                 .environmentObject(viewModel)               // Provides ViewModel as an environment object
         }
     }
-}
+}                                        // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
 
 
 
