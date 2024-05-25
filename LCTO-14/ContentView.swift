@@ -1,9 +1,9 @@
 //
-//  ContentView.swift
-//  LCTO-14
-// See LCTO-14.txt
+// ContentView.swift
+// LCTO-14
+// See DT/LCTO-14.txt
 
-//  Created by thomasperez on 4/17/24.
+// Created by thomasperez on 4/17/24.
 // CV is UI
 // "MODEL" is BUSINESS_LOGIC and DATA_MODEL
 
@@ -16,6 +16,7 @@ struct ContentView: View {
         ZStack {
             Color.white.ignoresSafeArea()  // Ensures the background covers all areas
             VStack {
+                
                                     // POST                 // POST                 // POST
                 
                 //Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
@@ -47,7 +48,7 @@ struct ContentView: View {
                 
                 
                 
-                                    // SEARCH     // CGPT 5-24-24)1600 search obj wh has a comment  // SEARCH               // SEARCH
+                                    // SEARCH     CGPT 5-24-24)1600 search obj wh has a comment  // SEARCH               // SEARCH
                 
                 //Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
                 
@@ -71,9 +72,11 @@ struct ContentView: View {
                         Text(productName)
                     }
                     .frame(maxHeight: 200)  // Ensures the list is not too tall
-                    //.border(Color.blue, width: 1)               // Optional: adds a border around the search results area
+                    //.border(Color.blue, width: 1)                     // Optional: adds a border around the search results area
                     
-                    /*                                              // USE LATER 5-24-24)2026
+                    
+                                            // @@@ SCROLLING   @@@ SCROLLING    ---->>> --->>>>>>
+                    /*                                                  // USE LATER 5-24-24)2026
                     ScrollView {
                         VStack(alignment: .leading) {
                             ForEach(viewModel.searchResults, id: \.self) { productName in
@@ -99,10 +102,10 @@ struct ContentView: View {
                         .font(.headline)
                         //.padding()
                 }
-                //Spacer()                                                              // Er= extra arg in call
+                //Spacer()                                              // Er= extra arg in call
             } // VStk
         } // ZStk
     } //var body
-} // struct                                           // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
+} // struct                                                             // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
 
-
+// //
