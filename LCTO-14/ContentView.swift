@@ -7,21 +7,21 @@
 // CV is UI
 // "MODEL" is BUSINESS_LOGIC and DATA_MODEL
 
-import SwiftUI                                          // Already present in LTCO_14App.swift
+import SwiftUI                                                       // Already present in LTCO_14App.swift
 
 struct ContentView: View {
-    @EnvironmentObject var viewModel: ViewModel         // Make sure ViewModel is provided as an environment object
+    @EnvironmentObject var viewModel: ViewModel                     // Make sure ViewModel is provided as an environment object
 
     var body: some View {
         ZStack {
-            Color.white.ignoresSafeArea()  // Ensures the background covers all areas
+            Color.white.ignoresSafeArea()   // Ensures the background covers all areas
             VStack {
                 
-                                    // POST                 // POST                 // POST
+                                            // POST                 // POST                 // POST
                 
                 //Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
                 
-                TextField("Enter the product here...", text: $viewModel.userInput) // .userInput2 !
+                TextField("Enter the product here...", text: $viewModel.userInput)  // .userInput2 !
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
@@ -48,7 +48,7 @@ struct ContentView: View {
                 
                 
                 
-                                    // SEARCH     CGPT 5-24-24)1600 search obj wh has a comment  // SEARCH               // SEARCH
+                            // SEARCH     CGPT 5-24-24)1600 search obj wh has a comment  // SEARCH               // SEARCH
                 
                 //Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
                 
@@ -65,18 +65,22 @@ struct ContentView: View {
                 .background(Color.blue)
                 .cornerRadius(10)
                 
-                // Displaying search results
+                                                                                        // Displaying search results
                 if !viewModel.searchResults.isEmpty {
-                    // Display search results
+                    
+                                            // NON-SCROLLING <<<---
+                    /*
                     List(viewModel.searchResults, id: \.self) { productName in
                         Text(productName)
                     }
-                    .frame(maxHeight: 200)  // Ensures the list is not too tall
-                    //.border(Color.blue, width: 1)                     // Optional: adds a border around the search results area
+                    .frame(maxHeight: 200)                                              // Ensures the list is not too tall
+                                            //.border(Color.blue, width: 1)  // Optional: adds a border around the search results area
+                                            // END NON-SCROLLING <<<---
+                    */
                     
                     
-                                            // @@@ SCROLLING   @@@ SCROLLING    ---->>> --->>>>>>
-                    /*                                                  // USE LATER 5-24-24)2026
+                                            // @@@ SCROLLING @@@ SCROLLING    ---->>> --->>>>>>
+                                                                      // USE LATER 5-24-24)2026
                     ScrollView {
                         VStack(alignment: .leading) {
                             ForEach(viewModel.searchResults, id: \.self) { productName in
@@ -94,8 +98,9 @@ struct ContentView: View {
                     .onReceive(viewModel.$searchResults) { _ in
                         print("\nSearch results updated: \(viewModel.searchResults)")
                     }
-                    */
-                   
+                    
+                                            // END @@@ SCROLLING @@@ SCROLLING    <<<<<<<---- <<<---
+                    
                     
                 } else {
                     Text("\nNo results found")
