@@ -50,12 +50,16 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
                                                 // SEARCH   // SEARCH   SEARCH FOR ->  5-26-24)1930  , = search obj wh has a comment
     
     func fetchProductNames(searchTerm: String) {
-        
                                                 // Check if the search term is empty and return immediately if true - Guard() nx line
         guard !searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            self.searchResults = [] // Optionally clear previous results or leave as is
+            self.searchResults = []             // Optionally clear previous results or leave as is
             print("No search term provided.")                                   // Only console out
-            self.searchMessage = "Please enter a search term."                  // Now console + + UI for UX : )
+            self.searchMessage = "Please enter a search term."                  // Now console + + UI for UX
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {               // C L E A R the message after 2 S E C. CGPT 5-31-24
+                self.searchMessage = ""
+            } // DispatchQueue.main.asyncAfter
+            
             return
         }
         
@@ -84,9 +88,8 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
     
                                                 // ERROR HANDING                //  5-24-24) ~ 1400
                                                 // ERROR HANDING                //  5-24-24) ~ 1400
-                                    // SEARCH FOR ->  5-24-24)1600  , = search obj wh has a comment
+                                    // search FOR ->  5-24-24)1600  , = search obj wh has a comment
     
-                                                        // CGPT 5-24-24)1536        >>>
                                                                                 // Generic error handler for CloudKit operations
     private func handleError(_ error: Error) {
         guard let ckError = error as? CKError else {                            // Guard forces early exit if conditions not met.

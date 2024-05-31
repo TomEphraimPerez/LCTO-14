@@ -52,6 +52,12 @@ struct ContentView: View {
                 .background(Color.blue)
                 .cornerRadius(10)
                 
+                if !viewModel.searchMessage.isEmpty { // CONDITIONALLY DISP the text based on whether searchMessage is not empty. CGPT-5-31-24
+                    Text(viewModel.searchMessage)
+                    .foregroundColor(.red)
+                    .padding()
+                }
+                
                                                                                         // Displaying search results
                 if !viewModel.searchResults.isEmpty {
                     
@@ -94,20 +100,10 @@ struct ContentView: View {
                         .font(.headline)
                         //.padding()
                 }
-                
                 //Spacer()                                              // Er= extra arg in call
+             
                 
-                
-                
-                
-                
-                
-                
-                Text(viewModel.searchMessage)
-                    .foregroundColor(.red)
-                    .padding()
-
-                
+             
 //  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
 
                 
