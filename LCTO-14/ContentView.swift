@@ -17,38 +17,25 @@ struct ContentView: View {
             Color.white.ignoresSafeArea()   // Ensures the background covers all areas
             VStack {
                 
-                                            // POST                 // POST                 // POST
-                
                 //Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
                 
-                TextField("Enter the product here...", text: $viewModel.userInput)  // .userInput2 !
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
+                //Spacer()
+
                 
-                TextField("Enter your comment here...", text: $viewModel.userInput2) // Binding the text field to the ViewModel's userInput
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                    .padding()
-                
-                Button("Post Comment") {
-                    let productName = viewModel.userInput       // .userInput2! This should be dynamic based on your app's needs
-                    let comment = viewModel.userInput2
-                    viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2)
-                }
-                .padding()
-                .background(Color.blue)
-                .foregroundColor(.white)
-                .cornerRadius(10)
-                
-                Spacer()
+//  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
                                 
+                                
+                            // STARS                        // STARS                       // STARS
+                
+                                                    // Average # STARS to display
                 
                 
                 
-                //  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
+//  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
                 
                 
+                            // SEARCH     5-24-24)1600      // SEARCH                       // SEARCH
                 
-                            // SEARCH     CGPT 5-24-24)1600 search obj wh has a comment  // SEARCH               // SEARCH
                 
                 //Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
                 
@@ -80,7 +67,7 @@ struct ContentView: View {
                     
                     
                                             // @@@ SCROLLING @@@ SCROLLING    ---->>> --->>>>>>
-                                                                      // USE LATER 5-24-24)2026
+                                                                
                     ScrollView {
                         VStack(alignment: .leading) {
                             ForEach(viewModel.searchResults, id: \.self) { productName in
@@ -107,10 +94,41 @@ struct ContentView: View {
                         .font(.headline)
                         //.padding()
                 }
+                
                 //Spacer()                                              // Er= extra arg in call
+                
+                
+                
+//  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
+
+                
+                            // POST                         // POST                         // POST
+                
+                
+                
+                TextField("Enter the product here...", text: $viewModel.userInput)  // .userInput2 !
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                TextField("Enter your comment here...", text: $viewModel.userInput2) // Binding the text field to the ViewModel's userInput
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
+                
+                Button("Post Comment") {
+                    let productName = viewModel.userInput       // .userInput2! This should be dynamic based on your app's needs
+                    let comment = viewModel.userInput2
+                    viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2)
+                }
+                .padding()
+                .background(Color.blue)
+                .foregroundColor(.white)
+                .cornerRadius(10)
+                
+                
             } // VStk
         } // ZStk
     } //var body
+    
 } // struct                                                             // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
 
 // //

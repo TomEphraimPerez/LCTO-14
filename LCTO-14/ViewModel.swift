@@ -45,9 +45,18 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
     }
     
                                                 // SEARCH   // SEARCH   SEARCH FOR ->  5-24-24)1600  , = search obj wh has a comment
-                                                // SEARCH   // SEARCH   SEARCH FOR ->  5-24-24)1600  , = search obj wh has a comment
+                                                // SEARCH   // SEARCH   SEARCH FOR ->  5-26-24)1930  , = search obj wh has a comment
     
     func fetchProductNames(searchTerm: String) {
+        
+                                                // Check if the search term is empty and return immediately if true
+        guard !searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            self.searchResults = [] // Optionally clear previous results or leave as is
+            print("No search term provided.")
+            return
+        }
+        
+        
         //let predicate = NSPredicate(format: "productName CONTAINS[c] %@", searchTerm)     // CRASH! 5-24-24)1818
         let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
@@ -62,10 +71,11 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
                     //self?.searchResults = Array(Set(products))
                     print("Search complete Found: \(productNames ?? [])" )
                           self?.searchResults = Array(Set(productNames ?? []) ) // Update search results and remove duplicates
-                }
-            }
-        }
-    }
+                } // else
+                    
+            } // Dispatch
+        } // DB.perform
+    } // func
     
     
     
