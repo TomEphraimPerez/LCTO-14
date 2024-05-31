@@ -99,6 +99,15 @@ struct ContentView: View {
                 
                 
                 
+                
+                
+                
+                
+                Text(viewModel.searchMessage)
+                    .foregroundColor(.red)
+                    .padding()
+
+                
 //  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
 
                 

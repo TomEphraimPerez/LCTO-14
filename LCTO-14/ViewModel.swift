@@ -17,6 +17,8 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
     @Published var userInput2: String = ""
     @Published var userInput3: String = ""                                      // For text-wise Search
     @Published var searchResults: [String] = []                                 // Array to store search results
+    @Published var searchMessage: String = ""                                   // For UI, a Guard block in VM when Search_ing [nil]
+
     
     private var database: CKDatabase {
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase  //Set to Pub if examining Git/inSights
@@ -49,10 +51,11 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
     
     func fetchProductNames(searchTerm: String) {
         
-                                                // Check if the search term is empty and return immediately if true
+                                                // Check if the search term is empty and return immediately if true - Guard() nx line
         guard !searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             self.searchResults = [] // Optionally clear previous results or leave as is
-            print("No search term provided.")
+            print("No search term provided.")                                   // Only console out
+            self.searchMessage = "Please enter a search term."                  // Now console + + UI for UX : )
             return
         }
         
