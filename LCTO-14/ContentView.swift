@@ -53,12 +53,13 @@ struct ContentView: View {
                 .cornerRadius(10)
                 
                 if !viewModel.searchMessage.isEmpty { // CONDITIONALLY DISP the text based on whether searchMessage is not empty. CGPT-5-31-24
-                    Text(viewModel.searchMessage)
+                    Text(viewModel.searchMessage)     // Text view displaying searchMessage will automatically appear and disappear based on
+                              // its content due to the reactive nature of the @PUBLISHED property and SwiftUI's automatic updating of views.
                     .foregroundColor(.red)
                     .padding()
                 }
                 
-                                                                                        // Displaying search results
+                                                            // Displaying search results
                 if !viewModel.searchResults.isEmpty {
                     
                                             // NON-SCROLLING <<<---
@@ -76,17 +77,18 @@ struct ContentView: View {
                                                                 
                     ScrollView {
                         VStack(alignment: .leading) {
-                            ForEach(viewModel.searchResults, id: \.self) { comment in       // Chg 'productName' to 'comment'
-                                Text(comment)                                               // Chg 'productName' to 'comment'
+                            ForEach(viewModel.searchResults, id: \.self) { comment in   // Chg 'productName' to 'comment'
+                                Text(comment)                                           // Chg 'productName' to 'comment'
                                     .padding()
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                    .background(Color.gray.opacity(0.3)) // Light gray background for each item
+                                    //.frame(maxWidth: .infinity, alignment: .leading)  // O
+                                    //.frame(maxHeight: 250)                              // Try 5-31-24)1323 -> centered
+                                    .background(Color.gray.opacity(0.3))                // Light gray background for each item
                                     .cornerRadius(5)
                             }
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: 50)
-                    .border(Color.blue, width: 1) // Optional: adds a border around the search results area
+                    .frame(maxWidth: .infinity, maxHeight: 120, alignment: .leading)
+                    .border(Color.blue, width: 1)                       // Optional: adds a border around the search results area
                     
                     .onReceive(viewModel.$searchResults) { _ in
                         print("\nSearch results updated: \(viewModel.searchResults)")

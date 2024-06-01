@@ -64,8 +64,8 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
         }
         
         
-        let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)
-        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+        let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)    // productName in PREDICATE
+        let query = CKQuery(recordType: "ProductComment", predicate: predicate)         // productName in PREDICATE
         
         database.perform(query, inZoneWith: nil) { [weak self] records, error in
             DispatchQueue.main.async {
