@@ -64,7 +64,6 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
         }
         
         
-        //let predicate = NSPredicate(format: "productName CONTAINS[c] %@", searchTerm)     // CRASH! 5-24-24)1818
         let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
         
@@ -72,12 +71,12 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
             DispatchQueue.main.async {
                 if let error = error {
                     print("Search error: \(error.localizedDescription)")
-                    self?.searchResults = []                                    // Clear results on error
+                    self?.searchResults = []                                        // Clear results on error
                 } else {
-                    let productNames = records?.compactMap { $0["productName"] as? String }
+                    let comment = records?.compactMap { $0["comment"] as? String }  // Chg 'productName' to 'comment'
                     //self?.searchResults = Array(Set(products))
-                    print("Search complete Found: \(productNames ?? [])" )
-                          self?.searchResults = Array(Set(productNames ?? []) ) // Update search results and remove duplicates
+                    print("Search complete Found: \(comment ?? [])" )               // Chg 'productName' to 'comment'
+                          self?.searchResults = Array(Set(comment ?? []) ) //Update srch res & rmv dupes. Chg 'productName' to 'comment'
                 } // else
                     
             } // Dispatch

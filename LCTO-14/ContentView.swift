@@ -76,8 +76,8 @@ struct ContentView: View {
                                                                 
                     ScrollView {
                         VStack(alignment: .leading) {
-                            ForEach(viewModel.searchResults, id: \.self) { productName in
-                                Text(productName)
+                            ForEach(viewModel.searchResults, id: \.self) { comment in       // Chg 'productName' to 'comment'
+                                Text(comment)                                               // Chg 'productName' to 'comment'
                                     .padding()
                                     .frame(maxWidth: .infinity, alignment: .leading)
                                     .background(Color.gray.opacity(0.3)) // Light gray background for each item
