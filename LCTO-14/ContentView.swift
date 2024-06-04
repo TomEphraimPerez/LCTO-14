@@ -7,35 +7,30 @@
 // CV is UI
 // "MODEL" is BUSINESS_LOGIC and DATA_MODEL
 
+// CGPT -> Manual Environment Setup: In some complex scenarios or for testing,
+  // directly pass viewModel as an observed object like this can be a temporary check:
+  // @ObservedObject var viewModel = ViewModel()
+
 import SwiftUI                                                       // Already present in LTCO_14App.swift
+import Combine
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: ViewModel                     // Make sure ViewModel is provided as an environment object
 
     var body: some View {
         ZStack {
-            Color.white.ignoresSafeArea()   // Ensures the background covers all areas
+            Color.white.ignoresSafeArea()                           // Ensures the background covers all areas
             VStack {
-                
                 //Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
-                
                 //Spacer()
-
                 
-//  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
-                                
-                                
-                            // STARS                        // STARS                       // STARS
-                
-                                                    // Average # STARS to display
+                StarView(rating: viewModel.averageRating)           // Using StarView within ContentView. (Get er if using the binding "$")
+                    .padding(.top)
+                    
                 
                 
                 
-//  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
-                
-                
-                            // SEARCH     5-24-24)1600      // SEARCH                       // SEARCH
-                
+                                        // SEARCH     5-24-24)1600      // SEARCH                       // SEARCH
                 
                 //Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
                 
@@ -62,26 +57,14 @@ struct ContentView: View {
                                                             // Displaying search results
                 if !viewModel.searchResults.isEmpty {
                     
-                                            // NON-SCROLLING <<<---
-                    /*
-                    List(viewModel.searchResults, id: \.self) { productName in
-                        Text(productName)
-                    }
-                    .frame(maxHeight: 200)                                              // Ensures the list is not too tall
-                                            //.border(Color.blue, width: 1)  // Optional: adds a border around the search results area
-                                            // END NON-SCROLLING <<<---
-                    */
-                    
-                    
-                                            // @@@ SCROLLING @@@ SCROLLING    ---->>> --->>>>>>
-                                                                
+                                            // E@@@ SCROLLING @@@ SCROLLING    >>>---- --->>>>>>>
                     ScrollView {
                         VStack(alignment: .leading) {
                             ForEach(viewModel.searchResults, id: \.self) { comment in   // Chg 'productName' to 'comment'
                                 Text(comment)                                           // Chg 'productName' to 'comment'
                                     .padding()
                                     //.frame(maxWidth: .infinity, alignment: .leading)  // O
-                                    //.frame(maxHeight: 250)                              // Try 5-31-24)1323 -> centered
+                                    //.frame(maxHeight: 250)                            // Try 5-31-24)1323 -> centered
                                     .background(Color.gray.opacity(0.3))                // Light gray background for each item
                                     .cornerRadius(5)
                             }
@@ -93,10 +76,9 @@ struct ContentView: View {
                     .onReceive(viewModel.$searchResults) { _ in
                         print("\nSearch results updated: \(viewModel.searchResults)")
                     }
-                    
                                             // END @@@ SCROLLING @@@ SCROLLING    <<<<<<<---- <<<---
                     
-                    
+        
                 } else {
                     Text("\nNo results found")
                         .font(.headline)
@@ -106,14 +88,10 @@ struct ContentView: View {
              
                 
              
-//  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
-
                 
-                            // POST                         // POST                         // POST
+                                    // POST                         // POST                         // POST
                 
-                
-                
-                TextField("Enter the product here...", text: $viewModel.userInput)  // .userInput2 !
+                TextField("Enter the product here...", text: $viewModel.userInput)  // .userInput
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                 
@@ -136,6 +114,65 @@ struct ContentView: View {
         } // ZStk
     } //var body
     
-} // struct                                                             // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
+} // struct                                                         // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
 
+
+
+
+//  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
+                                    // STARS                        // STARS                       // STARS
+                                    // Average # STARS to display
+    
+    //let imageFullStar = UIImage(systemName: "star.fill")
+    //let imageHalfStar = UIImage(systemName: "star.leadinghalf.filled")
+    //let imageHallowStar = UIImage(systemName: "star")
+    //var body: some View {
+
+struct StarView: View {
+    @EnvironmentObject var viewModel: ViewModel
+    var rating: Double  // Expected rating value between 0 and 5
+    
+    var body: some View {
+        HStack {
+            ForEach(0..<5) { index in
+                Image(systemName: starType(index: index))
+                    .foregroundColor(.red)
+            }
+        }
+        .onAppear{
+            viewModel.calculateAverageRating(for: "Specific Product Name")
+        }
+        //.onReceive(Just(rating)) { newValue in
+          //  print("\nRating updated to:\n \(newValue)")
+        
+    
+    } // var body
+
+    
+    private func starType(index: Int) -> String {
+        if Double(index) + 0.5 <= rating {
+            return "star.fill"  // SF Symbol for fully filled star
+        } else if Double(index) < rating {
+            return "star.leadinghalf.fill"  // SF Symbol for half-filled star
+        } else {
+            return "star"  // SF Symbol for empty star
+        }
+    } // Pvt func starType
+} // Free-standing struct StarView
+//  =   =   =   =   =   =   =   =   =   =   =   =   =   END STARS   =   =   =   =   =   =   =   =   =   =   =   =   =   =|
+
+
+
+
+// NON-SCROLLING --->>>
+/*
+List(viewModel.searchResults, id: \.self) { productName in
+Text(productName)
+}
+.frame(maxHeight: 200)                                              // Ensures the list is not too tall
+//.border(Color.blue, width: 1)  // Optional: adds a border around the search results area
+// END NON-SCROLLING <<<---
+*/
+
+// @@@ SCROLLING @@@ SCROLLING    ---->>> --->>>>>>
 // //

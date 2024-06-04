@@ -18,7 +18,7 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
     @Published var userInput3: String = ""                                      // For text-wise Search
     @Published var searchResults: [String] = []                                 // Array to store search results
     @Published var searchMessage: String = ""                                   // For UI, a Guard block in VM when Search_ing [nil]
-
+    @Published var averageRating: Double = 0.0 
     
     private var database: CKDatabase {
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase  //Set to Pub if examining Git/inSights
@@ -70,18 +70,43 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
         database.perform(query, inZoneWith: nil) { [weak self] records, error in
             DispatchQueue.main.async {
                 if let error = error {
-                    print("Search error: \(error.localizedDescription)")
+                    print("\nSearch error: \(error.localizedDescription)")
                     self?.searchResults = []                                        // Clear results on error
                 } else {
                     let comment = records?.compactMap { $0["comment"] as? String }  // Chg 'productName' to 'comment'
                     //self?.searchResults = Array(Set(products))
-                    print("Search complete Found: \(comment ?? [])" )               // Chg 'productName' to 'comment'
+                    print("\nSearch complete Found: \(comment ?? [])" )               // Chg 'productName' to 'comment'
                           self?.searchResults = Array(Set(comment ?? []) ) //Update srch res & rmv dupes. Chg 'productName' to 'comment'
                 } // else
                     
             } // Dispatch
         } // DB.perform
     } // func
+    
+    
+    
+    
+    
+    
+    
+    
+    func calculateAverageRating(for productName: String) {
+        let ratings: [Int] = [0, 1, 2, 3, 4, 1]  // Example: replace with fetch from CloudKit
+        let total = ratings.reduce(0, +)
+        let count = ratings.count
+        
+        DispatchQueue.main.async {
+            self.averageRating = count > 0 ? Double(total) / Double(count) : 0.0
+            print("\nCalculated average rating: \(self.averageRating)")
+        }
+    }
+
+    
+    
+    
+    
+    
+    
     
     
     
@@ -103,6 +128,6 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
             print("\nUnhandled error: \(ckError.localizedDescription)")
         }
     }
-}                                                       // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
+} // final class                                // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
 
 // //
