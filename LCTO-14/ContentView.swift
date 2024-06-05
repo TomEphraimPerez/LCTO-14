@@ -16,7 +16,10 @@ import Combine
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: ViewModel                     // Make sure ViewModel is provided as an environment object
-
+    //Manual Environment Setup: In some complex scenarios or for testing,
+      // directly pass viewModel as an observed object like this can be a temporary check:
+      // @ObservedObject var viewModel = ViewModel()
+      // @ObservedObject var viewModel = ViewModel()
     var body: some View {
         ZStack {
             Color.white.ignoresSafeArea()                           // Ensures the background covers all areas
@@ -34,8 +37,17 @@ struct ContentView: View {
                 
                 //Color(red: 0.0, green: 0.6, blue: 0.9).ignoresSafeArea()
                 
-                TextField("Search for the product here...", text: $viewModel.userInput3) // Binding the text field to the ViewModel's userInput
+                // The $ is used in conjunction with property wrappers (previously known as "property delegates").
+                // It's not an operator, but a prefix (thanks @matt!)
+                // e.g. in    @State var aState = false,    then State is a property wrapper.
+                // This means that if we write:
+                //  aState we're accessing a Bool value
+                //  $aState we're accessing a Binding<Bool> value
+                //  --->>> It doesn't "make" a binding.         $aState IS THE INDING. – matt
+
+                TextField("Search for the product here...", text: $viewModel.userInput3) //$ Binding text fld to VM's userInput. CGPT !
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocapitalization(.none)                                          // Disable automatic capitalization
                     .padding()
               
                 Button("Search Product") {                                              // CGPT 5-24-24)1600 search obj wh has a comment
@@ -56,7 +68,6 @@ struct ContentView: View {
                 
                                                             // Displaying search results
                 if !viewModel.searchResults.isEmpty {
-                    
                                             // E@@@ SCROLLING @@@ SCROLLING    >>>---- --->>>>>>>
                     ScrollView {
                         VStack(alignment: .leading) {
@@ -72,7 +83,6 @@ struct ContentView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: 120, alignment: .leading)
                     .border(Color.blue, width: 1)                       // Optional: adds a border around the search results area
-                    
                     .onReceive(viewModel.$searchResults) { _ in
                         print("\nSearch results updated: \(viewModel.searchResults)")
                     }
@@ -91,12 +101,14 @@ struct ContentView: View {
                 
                                     // POST                         // POST                         // POST
                 
-                TextField("Enter the product here...", text: $viewModel.userInput)  // .userInput
+                TextField("Enter the product here...", text: $viewModel.userInput)      // .userInput
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocapitalization(.none)                                          // Disable automatic capitalization
                     .padding()
                 
-                TextField("Enter your comment here...", text: $viewModel.userInput2) // Binding the text field to the ViewModel's userInput
+                TextField("Enter your comment here...", text: $viewModel.userInput2)    // Binding the text field to the VM's userInput
                     .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .autocapitalization(.none)  // Disable automatic capitalization
                     .padding()
                 
                 Button("Post Comment") {
@@ -144,10 +156,8 @@ struct StarView: View {
         }
         //.onReceive(Just(rating)) { newValue in
           //  print("\nRating updated to:\n \(newValue)")
-        
-    
     } // var body
-
+    
     
     private func starType(index: Int) -> String {
         if Double(index) + 0.5 <= rating {

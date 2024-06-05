@@ -42,8 +42,8 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
                     self.userInput = ""                                         // Clear the inputs after posting
                     self.userInput2 = ""
                 }
-            }
-        }
+            } // DispatchQueue
+        } // database
     }
     
                                                 // SEARCH   // SEARCH   SEARCH FOR ->  5-24-24)1600  , = search obj wh has a comment
@@ -53,8 +53,8 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
                                                 // Check if the search term is empty and return immediately if true - Guard() nx line
         guard !searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             self.searchResults = []             // Optionally clear previous results or leave as is
-            print("No search term provided.")                                   // Only console out
-            self.searchMessage = "Please enter a search term."                  // Now console + + UI for UX
+            print("\nNo search term provided.")                                         // Only console out
+            self.searchMessage = "Please enter a search term."                          // Now console + + UI for UX. 2 sec.
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {               // C L E A R the message after 2 S E C. CGPT 5-31-24
                 self.searchMessage = ""
@@ -64,18 +64,20 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
         }
         
         
-        let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)    // productName in PREDICATE
+        let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)    // O // ProductName in PREDICATE
+        //let predicate = NSPredicate(format: "productName CONTAINS %@", searchTerm)
+          // %@ is a var arg substitution for an object value—often a string, number, or date. StkOvr.
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)         // productName in PREDICATE
         
         database.perform(query, inZoneWith: nil) { [weak self] records, error in
             DispatchQueue.main.async {
                 if let error = error {
                     print("\nSearch error: \(error.localizedDescription)")
-                    self?.searchResults = []                                        // Clear results on error
+                    self?.searchResults = []                                            // Clear results on error
                 } else {
-                    let comment = records?.compactMap { $0["comment"] as? String }  // Chg 'productName' to 'comment'
+                    let comment = records?.compactMap { $0["comment"] as? String }      // Chg 'productName' to 'comment'
                     //self?.searchResults = Array(Set(products))
-                    print("\nSearch complete Found: \(comment ?? [])" )               // Chg 'productName' to 'comment'
+                    print("\nSearch complete Found: \(comment ?? [])" )                 // Chg 'productName' to 'comment'
                           self?.searchResults = Array(Set(comment ?? []) ) //Update srch res & rmv dupes. Chg 'productName' to 'comment'
                 } // else
                     
@@ -86,13 +88,11 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
     
     
     
-    
-    
-    
+// TEST                 // TEST             // TEST STARS                       // TEST                 //TEST STARS
     
     func calculateAverageRating(for productName: String) {
-        let ratings: [Int] = [0, 1, 2, 3, 4, 1]  // Example: replace with fetch from CloudKit
-        let total = ratings.reduce(0, +)
+        let ratings: [Int] = [0, 1, 2, 3, 4, 1]                    // Example: replace with fetch from CloudKit.  // 11/6 = 1.833
+        let total = ratings.reduce(0, +)                              // Replace abv [] with fetch from CloudKit !!
         let count = ratings.count
         
         DispatchQueue.main.async {
@@ -101,13 +101,6 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
         }
     }
 
-    
-    
-    
-    
-    
-    
-    
     
     
                                                 // ERROR HANDING                //  5-24-24) ~ 1400
