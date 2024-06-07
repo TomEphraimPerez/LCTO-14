@@ -44,7 +44,8 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
                 }
             } // DispatchQueue
         } // database
-    }
+    } // func postComment
+    
     
                                                 // SEARCH   // SEARCH   SEARCH FOR ->  5-24-24)1600  , = search obj wh has a comment
                                                 // SEARCH   // SEARCH   SEARCH FOR ->  5-26-24)1930  , = search obj wh has a comment
@@ -65,8 +66,8 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
         
         
         let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)    // O // ProductName in PREDICATE
-        //let predicate = NSPredicate(format: "productName CONTAINS %@", searchTerm)
-          // %@ is a var arg substitution for an object value—often a string, number, or date. StkOvr.
+            //let predicate = NSPredicate(format: "productName CONTAINS %@", searchTerm)
+            // %@ is a var arg substitution for an object value—often a string, number, or date. StkOvr.
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)         // productName in PREDICATE
         
         database.perform(query, inZoneWith: nil) { [weak self] records, error in
@@ -75,12 +76,11 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
                     print("\nSearch error: \(error.localizedDescription)")
                     self?.searchResults = []                                            // Clear results on error
                 } else {
-                    let comment = records?.compactMap { $0["comment"] as? String }      // Chg 'productName' to 'comment'
+                    let comments = records?.compactMap { $0["comment"] as? String } ?? []      // Chg 'productName' to 'comment'
                     //self?.searchResults = Array(Set(products))
-                    print("\nSearch complete Found: \(comment ?? [])" )                 // Chg 'productName' to 'comment'
-                          self?.searchResults = Array(Set(comment ?? []) ) //Update srch res & rmv dupes. Chg 'productName' to 'comment'
+                    print("\nSearch complete Found: \(comments)" )                 // Chg 'productName' to 'comment'
+                          self?.searchResults = Array(Set(comments) ) //Update srch res & rmv dupes. Chg 'productName' to 'comment'
                 } // else
-                    
             } // Dispatch
         } // DB.perform
     } // func
@@ -89,7 +89,7 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
     
     
 // TEST                 // TEST             // TEST STARS                       // TEST                 //TEST STARS
-    
+/*
     func calculateAverageRating(for productName: String) {
         let ratings: [Int] = [0, 1, 2, 3, 4, 1]                    // Example: replace with fetch from CloudKit.  // 11/6 = 1.833
         let total = ratings.reduce(0, +)                              // Replace abv [] with fetch from CloudKit !!
@@ -99,10 +99,34 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
             self.averageRating = count > 0 ? Double(total) / Double(count) : 0.0
             print("\nCalculated average rating: \(self.averageRating)")
         }
+    }   // END TEST                         END TEST                            END TEST                 END TEST
+*/
+// TRY/   6-6-24)1421 after telling CGPT that all code is correct <a9f . . . f96> exc for hard coded test blk abv.
+    func calculateAverageRating(for productName: String) {
+        let predicate = NSPredicate(format: "productName == %@", productName)
+        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+
+        database.perform(query, inZoneWith: nil) { [weak self] records, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self?.searchMessage = "Failed to fetch stars: \(error.localizedDescription)"
+                    self?.averageRating = 0
+                } else {
+                    let stars = records?.compactMap { $0["Stars"] as? Int } ?? []
+                    if !stars.isEmpty {
+                        let total = stars.reduce(0, +)
+                        let average = Double(total) / Double(stars.count)
+                        self?.averageRating = average
+                    } else {
+                        self?.averageRating = 0
+                        self?.searchMessage = "No stars found for \(productName)"
+                    }
+                }
+            }
+        }
     }
 
-    
-    
+
                                                 // ERROR HANDING                //  5-24-24) ~ 1400
                                                 // ERROR HANDING                //  5-24-24) ~ 1400
                                     // search FOR ->  5-24-24)1600  , = search obj wh has a comment
@@ -120,7 +144,8 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
         default:
             print("\nUnhandled error: \(ckError.localizedDescription)")
         }
-    }
+    } // pvt func handleError
+    
 } // final class                                // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
 
 // //
