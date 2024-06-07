@@ -11,6 +11,7 @@ struct ContentView: View {
 
             TextField("Search for the product here...", text: $viewModel.userInput3)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .autocapitalization(.none)
                 .padding()
 
             Button("Search Product") {
@@ -44,10 +45,12 @@ struct ContentView: View {
 
             TextField("Enter the product here...", text: $viewModel.userInput)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .autocapitalization(.none)
                 .padding()
 
             TextField("Enter your comment here...", text: $viewModel.userInput2)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .autocapitalization(.none)
                 .padding()
 
             Button("Post Comment") {
