@@ -4,11 +4,14 @@
 // See DT/LCTO-14.txt
 
 // Created by thomasperez on 5/13/24.
+// DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
+// Other Ap = pass to sim
+
 // VM is UI PRESENTATION LOGIC AND STATE
 // "MODEL" IS BUSINESS_LOGIC and DATA_MODEL
 // See LCTO-14.txt
 
-import Foundation                                                               //O cgpt
+import Foundation
 import CloudKit
 import os.log                                                                   // StkOvr or Apple GitHub
 
@@ -55,7 +58,7 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
         guard !searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             self.searchResults = []             // Optionally clear previous results or leave as is
             print("\nNo search term provided.")                                         // Only console out
-            self.searchMessage = "Please enter a search term."                          // 2sec. Now console + + UI for UX. 2 sec.
+            self.searchMessage = "Please enter a search term."                          // 2 sec. Now console + + UI for UX. 2 sec.
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {               // C L E A R the message after 2 S E C. CGPT 5-31-24
                 self.searchMessage = ""
@@ -119,7 +122,7 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
                         self?.averageRating = average
                     } else {
                         self?.averageRating = 0
-                        self?.searchMessage = "No stars found for \(productName)"
+                        //self?.searchMessage = "No Stars found for \(productName)"     // O but displays for 0.2 sec :/    :/
                     }
                 }
             }

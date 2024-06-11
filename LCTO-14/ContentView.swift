@@ -1,22 +1,23 @@
 
 // DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
-//
+// Other Ap = pass to sim
+
 import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: ViewModel
     @State private var comment: String = ""
-    private let maxCharacters = 10                                 // Set the maximum number of characters allowed
+    private let maxCharacters = 100                             // Set the maximum number of characters allowed
     
     var body: some View {
         VStack {
-            // Displaying the star ratings at the top
+                                                                // Displaying the star ratings at the top
             StarView(rating: viewModel.averageRating)
                 .padding(.top)
             
                                                                 // SEARCH
             
-            TextField("Search for the product here...", text: $viewModel.userInput3)
+            TextField("Search for the product here...", text: $viewModel.userInput3)    // "$" !
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .autocapitalization(.none)
                 .padding()
@@ -30,7 +31,14 @@ struct ContentView: View {
             .background(Color.blue)
             .cornerRadius(10)
 
-            // Display search results or a placeholder message
+            if !viewModel.searchMessage.isEmpty {
+                Text(viewModel.searchMessage)
+                    .foregroundColor(.red)
+                    .padding()
+            }
+            
+            
+                                                                // Display search results or a placeholder message
             if !viewModel.searchResults.isEmpty {
                 ScrollView {
                     VStack(alignment: .leading) {
