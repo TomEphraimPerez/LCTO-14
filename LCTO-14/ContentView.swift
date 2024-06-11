@@ -1,14 +1,21 @@
+
+// DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
+//
 import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: ViewModel
-
+    @State private var comment: String = ""
+    private let maxCharacters = 10                                 // Set the maximum number of characters allowed
+    
     var body: some View {
         VStack {
             // Displaying the star ratings at the top
             StarView(rating: viewModel.averageRating)
                 .padding(.top)
-
+            
+                                                                // SEARCH
+            
             TextField("Search for the product here...", text: $viewModel.userInput3)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .autocapitalization(.none)
@@ -43,15 +50,38 @@ struct ContentView: View {
                     .padding()
             }
 
+            
+                                                                // POST
+            
             TextField("Enter the product here...", text: $viewModel.userInput)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .autocapitalization(.none)
                 .padding()
-
-            TextField("Enter your comment here...", text: $viewModel.userInput2)
+            
+            
+            /*
+            TextField("Enter your comment here...", text: $viewModel.userInput2)    // O and working 6-10-24)1651
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .autocapitalization(.none)
                 .padding()
+             */
+            TextField("Enter your comment here...", text: $viewModel.userInput2)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()
+                .autocapitalization(.none)
+                .onChange(of: viewModel.userInput2) { newValue in
+                    if newValue.count > maxCharacters {
+                        viewModel.userInput2 = String(newValue.prefix(maxCharacters))
+                    }
+                }
+            
+            
+            Text("\(comment.count)/\(maxCharacters) characters")                    // Char counter
+                .font(.caption)
+                .foregroundColor(.gray)
+                .padding(.bottom)
+            
+            
 
             Button("Post Comment") {
                 viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2)
@@ -64,6 +94,7 @@ struct ContentView: View {
     }
 }
 
+                                                                // STARS
 struct StarView: View {
     var rating: Double
     

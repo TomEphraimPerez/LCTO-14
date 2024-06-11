@@ -55,7 +55,7 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
         guard !searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             self.searchResults = []             // Optionally clear previous results or leave as is
             print("\nNo search term provided.")                                         // Only console out
-            self.searchMessage = "Please enter a search term."                          // Now console + + UI for UX. 2 sec.
+            self.searchMessage = "Please enter a search term."                          // 2sec. Now console + + UI for UX. 2 sec.
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {               // C L E A R the message after 2 S E C. CGPT 5-31-24
                 self.searchMessage = ""
