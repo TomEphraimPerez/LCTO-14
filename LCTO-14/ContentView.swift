@@ -1,6 +1,8 @@
 
 // DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
 // Other Ap = pass to sim
+// Xcode 14.2
+
 
 import SwiftUI
 
@@ -26,7 +28,8 @@ struct ContentView: View {
                 viewModel.fetchProductNames(searchTerm: viewModel.userInput3)
                 viewModel.calculateAverageRating(for: viewModel.userInput3)
             }
-            .padding()
+            //.padding()                                        // O
+            .padding(EdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10))
             .foregroundColor(.white)
             .background(Color.blue)
             .cornerRadius(10)
@@ -67,12 +70,6 @@ struct ContentView: View {
                 .padding()
             
             
-            /*
-            TextField("Enter your comment here...", text: $viewModel.userInput2)    // O and working 6-10-24)1651
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-                .autocapitalization(.none)
-                .padding()
-             */
             TextField("Enter your comment here...", text: $viewModel.userInput2)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
@@ -94,7 +91,8 @@ struct ContentView: View {
             Button("Post Comment") {
                 viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2)
             }
-            .padding()
+            //.padding()                                        // O
+            .padding(EdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10))
             .background(Color.blue)
             .foregroundColor(.white)
             .cornerRadius(10)

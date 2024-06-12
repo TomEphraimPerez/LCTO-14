@@ -11,6 +11,7 @@
 // "MODEL" IS BUSINESS_LOGIC and DATA_MODEL
 // See LCTO-14.txt
 
+// Xcode 14.2
 import Foundation
 import CloudKit
 import os.log                                                                   // StkOvr or Apple GitHub

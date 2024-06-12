@@ -20,6 +20,7 @@
 // SO try/ - according to https://chatgpt.com/c/e169c3d8-c57b-4a51-bdef-6170294850d3 in
   // "If Using @EnvironmentObject" § toward the end.
 
+// Xcode 14.2
 import SwiftUI                                              // Already present in CV.swift
 
 @main
