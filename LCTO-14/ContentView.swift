@@ -1,35 +1,23 @@
-
-// DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
-// Other Ap = pass to sim
-// Xcode 14.2
-
-
 import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: ViewModel
-    @State private var comment: String = ""
-    private let maxCharacters = 100                             // Set the maximum number of characters allowed
     
     var body: some View {
         VStack {
-                                                                // Displaying the star ratings at the top
             StarView(rating: viewModel.averageRating)
-                .padding(.top)
+                //.padding(.top)                                                        // O
             
-                                                                // SEARCH
-            
-            TextField("Search for the product here...", text: $viewModel.userInput3)    // "$" !
+            TextField("Search for the product here...", text: $viewModel.userInput3)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                //.padding()                                                            // O
                 .autocapitalization(.none)
-                .padding()
 
             Button("Search Product") {
                 viewModel.fetchProductNames(searchTerm: viewModel.userInput3)
                 viewModel.calculateAverageRating(for: viewModel.userInput3)
             }
-            //.padding()                                        // O
-            .padding(EdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10))
+            .padding()
             .foregroundColor(.white)
             .background(Color.blue)
             .cornerRadius(10)
@@ -40,8 +28,6 @@ struct ContentView: View {
                     .padding()
             }
             
-            
-                                                                // Display search results or a placeholder message
             if !viewModel.searchResults.isEmpty {
                 ScrollView {
                     VStack(alignment: .leading) {
@@ -52,55 +38,39 @@ struct ContentView: View {
                                 .cornerRadius(5)
                         }
                     }
+                    .frame(maxWidth: .infinity, maxHeight: 360)
+                    //.border(Color.blue, width: 1)                                     // O
                 }
-                .frame(maxWidth: .infinity, maxHeight: 120)
-                .border(Color.blue, width: 1)
             } else {
                 Text("No results found")
                     .font(.headline)
-                    .padding()
+                    //.padding()                                                        // O
             }
 
-            
-                                                                // POST
-            
+            Spacer() // Maintains spacing between sections if there are no search results.
+
             TextField("Enter the product here...", text: $viewModel.userInput)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
+                .padding()                                                            // O. Leave alone.
                 .autocapitalization(.none)
-                .padding()
-            
-            
+
             TextField("Enter your comment here...", text: $viewModel.userInput2)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
                 .autocapitalization(.none)
-                .onChange(of: viewModel.userInput2) { newValue in
-                    if newValue.count > maxCharacters {
-                        viewModel.userInput2 = String(newValue.prefix(maxCharacters))
-                    }
-                }
             
-            
-            Text("\(comment.count)/\(maxCharacters) characters")                    // Char counter
-                .font(.caption)
-                .foregroundColor(.gray)
-                .padding(.bottom)
-            
-            
-
             Button("Post Comment") {
-                viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2)
+                viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
             }
-            //.padding()                                        // O
-            .padding(EdgeInsets(top: 6, leading: 10, bottom: 6, trailing: 10))
+            .padding()
             .background(Color.blue)
             .foregroundColor(.white)
             .cornerRadius(10)
         }
+        .padding()
     }
 }
 
-                                                                // STARS
 struct StarView: View {
     var rating: Double
     
@@ -112,7 +82,7 @@ struct StarView: View {
             }
         }
     }
-
+    
     private func starType(index: Int) -> String {
         if Double(index) < rating {
             return index + 1 <= Int(rating) ? "star.fill" : "star.leadinghalf.fill"

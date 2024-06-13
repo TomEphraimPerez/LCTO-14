@@ -1,111 +1,66 @@
-//
-// ViewModel.swift
-// LCTO-14
-// See DT/LCTO-14.txt
-
-// Created by thomasperez on 5/13/24.
-// DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
-// Other Ap = pass to sim
-
-// VM is UI PRESENTATION LOGIC AND STATE
-// "MODEL" IS BUSINESS_LOGIC and DATA_MODEL
-// See LCTO-14.txt
-
-// Xcode 14.2
 import Foundation
 import CloudKit
-import os.log                                                                   // StkOvr or Apple GitHub
 
-final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Published to create observable objs. Exposes VM props for V UI.
-    @Published var userInput: String = ""                                       // This will store the user's input from the text field
+final class ViewModel: ObservableObject {
+    @Published var userInput: String = ""
     @Published var userInput2: String = ""
-    @Published var userInput3: String = ""                                      // For text-wise Search
-    @Published var searchResults: [String] = []                                 // Array to store search results
-    @Published var searchMessage: String = ""                                   // For UI, a Guard block in VM when Search_ing [nil]
-    @Published var averageRating: Double = 0.0 
-    
+    @Published var userInput3: String = ""
+    @Published var userInput4: String = ""
+    @Published var searchResults: [String] = []
+    @Published var searchMessage: String = ""
+    @Published var averageRating: Double = 0.0
+
     private var database: CKDatabase {
-        return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase  //Set to Pub if examining Git/inSights
+        return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase
     }
 
-    
-                                                // POST        SEARCH FOR ->  5-24-24)1600  , = search obj wh has a comment
-                                                // POST        SEARCH FOR ->  5-24-24)1600  , = search obj wh has a comment
-    
-    func postComment(productName: String, comment: String) {
+    func postComment(productName: String, comment: String, rating: String) {
         let record = CKRecord(recordType: "ProductComment")
         record["productName"] = productName
         record["comment"] = comment
+        record["Stars"] = Int(rating) ?? 0
         
-        database.save(record) { record, error in
+        database.save(record) { [weak self] _, error in
             DispatchQueue.main.async {
                 if let error = error {
-                    self.handleError(error)
+                    self?.handleError(error)
                 } else {
-                    print("\nProduct and Comment posted successfully!")         // Prints to console
-                    self.userInput = ""                                         // Clear the inputs after posting
-                    self.userInput2 = ""
+                    print("Product and Comment posted successfully!")
+                    self?.userInput = ""
+                    self?.userInput2 = ""
+                    self?.userInput4 = ""
                 }
-            } // DispatchQueue
-        } // database
-    } // func postComment
-    
-    
-                                                // SEARCH   // SEARCH   SEARCH FOR ->  5-24-24)1600  , = search obj wh has a comment
-                                                // SEARCH   // SEARCH   SEARCH FOR ->  5-26-24)1930  , = search obj wh has a comment
-    
+            }
+        }
+    }
+
     func fetchProductNames(searchTerm: String) {
-                                                // Check if the search term is empty and return immediately if true - Guard() nx line
         guard !searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-            self.searchResults = []             // Optionally clear previous results or leave as is
-            print("\nNo search term provided.")                                         // Only console out
-            self.searchMessage = "Please enter a search term."                          // 2 sec. Now console + + UI for UX. 2 sec.
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {               // C L E A R the message after 2 S E C. CGPT 5-31-24
+            self.searchResults = []
+            self.searchMessage = "Please enter a search term."
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                 self.searchMessage = ""
-            } // DispatchQueue.main.asyncAfter
-            
+            }
             return
         }
-        
-        
-        let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)    // O // ProductName in PREDICATE
-            //let predicate = NSPredicate(format: "productName CONTAINS %@", searchTerm)
-            // %@ is a var arg substitution for an object value—often a string, number, or date. StkOvr.
-        let query = CKQuery(recordType: "ProductComment", predicate: predicate)         // productName in PREDICATE
+
+        let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)
+        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
         
         database.perform(query, inZoneWith: nil) { [weak self] records, error in
             DispatchQueue.main.async {
                 if let error = error {
-                    print("\nSearch error: \(error.localizedDescription)")
-                    self?.searchResults = []                                            // Clear results on error
+                    print("Search error: \(error.localizedDescription)")
+                    self?.searchResults = []
                 } else {
-                    let comments = records?.compactMap { $0["comment"] as? String } ?? []      // Chg 'productName' to 'comment'
-                    //self?.searchResults = Array(Set(products))
-                    print("\nSearch complete Found: \(comments)" )                 // Chg 'productName' to 'comment'
-                          self?.searchResults = Array(Set(comments) ) //Update srch res & rmv dupes. Chg 'productName' to 'comment'
-                } // else
-            } // Dispatch
-        } // DB.perform
-    } // func
-    
-    
-    
-    
-// TEST                 // TEST             // TEST STARS                       // TEST                 //TEST STARS
-/*
-    func calculateAverageRating(for productName: String) {
-        let ratings: [Int] = [0, 1, 2, 3, 4, 1]                    // Example: replace with fetch from CloudKit.  // 11/6 = 1.833
-        let total = ratings.reduce(0, +)                              // Replace abv [] with fetch from CloudKit !!
-        let count = ratings.count
-        
-        DispatchQueue.main.async {
-            self.averageRating = count > 0 ? Double(total) / Double(count) : 0.0
-            print("\nCalculated average rating: \(self.averageRating)")
+                    let comments = records?.compactMap { $0["comment"] as? String } ?? []
+                    self?.searchResults = Array(Set(comments))
+                    print("Search complete. Found: \(self?.searchResults ?? [])")
+                }
+            }
         }
-    }   // END TEST                         END TEST                            END TEST                 END TEST
-*/
-// TRY/   6-6-24)1421 after telling CGPT that all code is correct <a9f . . . f96> exc for hard coded test blk abv.
+    }
+
     func calculateAverageRating(for productName: String) {
         let predicate = NSPredicate(format: "productName == %@", productName)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
@@ -123,21 +78,14 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
                         self?.averageRating = average
                     } else {
                         self?.averageRating = 0
-                        //self?.searchMessage = "No Stars found for \(productName)"     // O but displays for 0.2 sec :/    :/
                     }
                 }
             }
         }
     }
 
-
-                                                // ERROR HANDING                //  5-24-24) ~ 1400
-                                                // ERROR HANDING                //  5-24-24) ~ 1400
-                                    // search FOR ->  5-24-24)1600  , = search obj wh has a comment
-    
-                                                                                // Generic error handler for CloudKit operations
     private func handleError(_ error: Error) {
-        guard let ckError = error as? CKError else {                            // Guard forces early exit if conditions not met.
+        guard let ckError = error as? CKError else {
             print("Error: \(error.localizedDescription)")
             return
         }
@@ -148,8 +96,5 @@ final class ViewModel: ObservableObject {   // Typically, ObsObj used w @Publish
         default:
             print("\nUnhandled error: \(ckError.localizedDescription)")
         }
-    } // pvt func handleError
-    
-} // final class                                // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
-
-// //
+    }
+}
