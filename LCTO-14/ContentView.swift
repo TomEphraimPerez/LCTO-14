@@ -54,6 +54,19 @@ struct ContentView: View {
                 .padding()                                                            // O. Leave alone.
                 .autocapitalization(.none)
 
+            
+            
+            
+            
+            TextField("Enter star rating (0-5)", text: $viewModel.userInput4)
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding()
+            
+            
+            
+            
+            
             TextField("Enter your comment here...", text: $viewModel.userInput2)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
