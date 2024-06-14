@@ -18,14 +18,14 @@ final class ViewModel: ObservableObject {
         let record = CKRecord(recordType: "ProductComment")
         record["productName"] = productName
         record["comment"] = comment
-        record["Stars"] = Int(rating) ?? 0
+        record["Stars"] = Int(rating) ?? 0                            // Note training '0' after '??' OW er-> 'amniguous w/o more content'
         
         database.save(record) { [weak self] _, error in
             DispatchQueue.main.async {
                 if let error = error {
                     self?.handleError(error)
                 } else {
-                    print("Product and Comment posted successfully!")
+                    print("Product, Comment, and # Stars posted OK!")
                     self?.userInput = ""
                     self?.userInput2 = ""
                     self?.userInput4 = ""

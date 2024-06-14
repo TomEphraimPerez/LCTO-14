@@ -28,49 +28,79 @@ struct ContentView: View {
                     .padding()
             }
             
-            if !viewModel.searchResults.isEmpty {
+            
+            
+            
+            
+/*
+            if !viewModel.searchResults.isEmpty {       // O. Not too bad, just need taller
                 ScrollView {
                     VStack(alignment: .leading) {
                         ForEach(viewModel.searchResults, id: \.self) { comment in
                             Text(comment)
-                                .padding()
+                                //.padding()                                            // O. Better without padding()
                                 .background(Color.gray.opacity(0.3))
                                 .cornerRadius(5)
                         }
                     }
-                    .frame(maxWidth: .infinity, maxHeight: 360)
-                    //.border(Color.blue, width: 1)                                     // O
+                    .frame(maxWidth: .infinity, maxHeight: 900)                         // O had 360
+                    .border(Color.blue, width: 2)                                       // O
                 }
             } else {
                 Text("No results found")
                     .font(.headline)
-                    //.padding()                                                        // O
+                    //.padding()                                                        // O. Better without it.
+            }
+*/
+            if !viewModel.searchResults.isEmpty {
+                GeometryReader { geometry in
+                    ScrollView {
+                        VStack(alignment: .leading) {
+                            ForEach(viewModel.searchResults, id: \.self) { comment in
+                                Text(comment)
+                                    .padding()
+                                    .background(Color.gray.opacity(0.3))                // Was 0.3
+                                    .cornerRadius(2)                                    // Was 5.
+                            }
+                        }
+                    }
+                    .frame(width: geometry.size.width, height: geometry.size.height * 1.95) // Using 66% of available height
+                    .border(Color.blue, width: 2)                                           // Keep this fr prev <snippet>
+                }
+            } else {
+                Text("No results found")
+                    .font(.headline)
             }
 
-            Spacer() // Maintains spacing between sections if there are no search results.
+            
+            
+            
+            
+            Spacer()                                    // O. Keep. Maintains spacing bt sections if there are no results.
 
+            
             TextField("Enter the product here...", text: $viewModel.userInput)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()                                                            // O. Leave alone.
+                .padding()                                              // O. Leave alone.
                 .autocapitalization(.none)
 
-            
-            
-            
-            
+        
             TextField("Enter star rating (0-5)", text: $viewModel.userInput4)
                             .keyboardType(.numberPad)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
             
             
-            
-            
-            
             TextField("Enter your comment here...", text: $viewModel.userInput2)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
                 .autocapitalization(.none)
+                .onChange(of: viewModel.userInput2) { newValue in
+                        if newValue.count > 60 {                        // Adjust the max character limit as needed
+                            viewModel.userInput2 = String(newValue.prefix(60))
+                        }
+                }
+            
             
             Button("Post Comment") {
                 viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
