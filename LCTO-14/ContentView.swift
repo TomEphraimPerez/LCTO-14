@@ -1,3 +1,5 @@
+
+
 import SwiftUI
 
 struct ContentView: View {
@@ -28,43 +30,21 @@ struct ContentView: View {
                     .padding()
             }
             
-            
-            
-            
-            
-/*
-            if !viewModel.searchResults.isEmpty {       // O. Not too bad, just need taller
-                ScrollView {
-                    VStack(alignment: .leading) {
-                        ForEach(viewModel.searchResults, id: \.self) { comment in
-                            Text(comment)
-                                //.padding()                                            // O. Better without padding()
-                                .background(Color.gray.opacity(0.3))
-                                .cornerRadius(5)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, maxHeight: 900)                         // O had 360
-                    .border(Color.blue, width: 2)                                       // O
-                }
-            } else {
-                Text("No results found")
-                    .font(.headline)
-                    //.padding()                                                        // O. Better without it.
-            }
-*/
             if !viewModel.searchResults.isEmpty {
                 GeometryReader { geometry in
                     ScrollView {
                         VStack(alignment: .leading) {
                             ForEach(viewModel.searchResults, id: \.self) { comment in
                                 Text(comment)
-                                    .padding()
+                                    //.padding()                                        // O. LKG 6-13-24
+                                    .padding(.vertical, 4) // Reduced vertical padding
+                                    .frame(height: 20) // Explicit height for each comment
                                     .background(Color.gray.opacity(0.3))                // Was 0.3
                                     .cornerRadius(2)                                    // Was 5.
                             }
                         }
                     }
-                    .frame(width: geometry.size.width, height: geometry.size.height * 1.95) // Using 66% of available height
+                    .frame(width: geometry.size.width, height: geometry.size.height * 2.15) // Using 66% of available height
                     .border(Color.blue, width: 2)                                           // Keep this fr prev <snippet>
                 }
             } else {
