@@ -63,7 +63,7 @@ import SwiftUI
                              }
                          }
                      }
-                     .frame(width: geometry.size.width, height: geometry.size.height * 1.6) // Using 66% (2.15) of available ht
+                     .frame(width: geometry.size.width, height: geometry.size.height * 1.2)  // O=1.6->using 66% of available ht
                      .border(Color.blue, width: 2)                                           // Keep this fr prev <snippet>
                  }
              } else {
