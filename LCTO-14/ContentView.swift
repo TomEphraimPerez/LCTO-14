@@ -9,7 +9,7 @@ struct ContentView: View {
         VStack {
             StarView(rating: viewModel.averageRating)
                 //.padding(.top)                                                        // O
-            
+                .padding(.top, -30)
             TextField("Search for the product here...", text: $viewModel.userInput3)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 //.padding()                                                            // O
@@ -37,14 +37,14 @@ struct ContentView: View {
                             ForEach(viewModel.searchResults, id: \.self) { comment in
                                 Text(comment)
                                     //.padding()                                        // O. LKG 6-13-24
-                                    .padding(.vertical, 4) // Reduced vertical padding
-                                    .frame(height: 20) // Explicit height for each comment
+                                    .padding(.vertical, 4)                              // Reduced vertical padding
+                                    .frame(height: 20)                                  // Explicit height for each comment
                                     .background(Color.gray.opacity(0.3))                // Was 0.3
                                     .cornerRadius(2)                                    // Was 5.
                             }
                         }
                     }
-                    .frame(width: geometry.size.width, height: geometry.size.height * 2.15) // Using 66% of available height
+                    .frame(width: geometry.size.width, height: geometry.size.height * 1.6) // Using 66% (2.15) of available ht
                     .border(Color.blue, width: 2)                                           // Keep this fr prev <snippet>
                 }
             } else {
@@ -53,13 +53,11 @@ struct ContentView: View {
             }
 
             
-            
-            
-            
             Spacer()                                    // O. Keep. Maintains spacing bt sections if there are no results.
 
             
             TextField("Enter the product here...", text: $viewModel.userInput)
+                .padding(.top)                                     // Was -5 (1.1 cm abv usrIP 4)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()                                              // O. Leave alone.
                 .autocapitalization(.none)
@@ -72,6 +70,7 @@ struct ContentView: View {
             
             
             TextField("Enter your comment here...", text: $viewModel.userInput2)
+                .padding(.top, -30)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
                 .autocapitalization(.none)

@@ -8,6 +8,7 @@
 
 // DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
 // Other Ap = pass to sim
+// Record_Type = ProductComment
 /*
  https://developer.apple.com/forums/thread/750845
   . . . in toplevel LCTO-14 /LCTO-14.xcodeproj/Build_settings/Deployment/Targeted_Device_Families/iOS_deployment_target/
