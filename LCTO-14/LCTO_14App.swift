@@ -10,6 +10,7 @@
  DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
  Other Ap = pass to sim
  Record_Type = ProductComment
+    Can't use exclamation points on comments
 */
 /*
  https://developer.apple.com/forums/thread/750845
