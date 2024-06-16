@@ -8,11 +8,10 @@ struct ContentView: View {
     var body: some View {
         VStack {
             StarView(rating: viewModel.averageRating)
-                //.padding(.top)                                                        // O
                 .padding(.top, -30)
             TextField("Search for the product here...", text: $viewModel.userInput3)
+                .frame(width: UIScreen.main.bounds.width * 0.82)                        // Set width to 92% of the screen width
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                //.padding()                                                            // O
                 .autocapitalization(.none)
 
             Button("Search Product") {
@@ -36,11 +35,11 @@ struct ContentView: View {
                         VStack(alignment: .leading) {
                             ForEach(viewModel.searchResults, id: \.self) { comment in
                                 Text(comment)
-                                    //.padding()                                        // O. LKG 6-13-24
-                                    .padding(.vertical, 4)                              // Reduced vertical padding
-                                    .frame(height: 20)                                  // Explicit height for each comment
-                                    .background(Color.gray.opacity(0.3))                // Was 0.3
-                                    .cornerRadius(2)                                    // Was 5.
+                                    //.padding()                                            // O. LKG 6-13-24
+                                    .padding(.vertical, 4)                                  // Reduced vertical padding
+                                    .frame(height: 20)                                      // Explicit height for each comment
+                                    .background(Color.gray.opacity(0.3))                    // Was 0.3
+                                    .cornerRadius(2)                                        // Was 5.
                             }
                         }
                     }
@@ -57,25 +56,30 @@ struct ContentView: View {
 
             
             TextField("Enter the product here...", text: $viewModel.userInput)
-                .padding(.top)                                     // Was -5 (1.1 cm abv usrIP 4)
+                //.padding(.top, -10.0)                                                     // Was -10.0 (0.7 cm abv usrIP 4)
+                .frame(width: UIScreen.main.bounds.width * 0.82)                            // Set width to 92% of the screen width
+                //.padding([.top], UIScreen.main.bounds.height * 0.16)  // Adds padding top, shifting txt fld dwn 16% of the scn ht
+                //.padding(.top, UIScreen.main.bounds.height * 0.2) // Add 9% of scn ht as top padding. If >>, button lowers too much
+                .offset(y: UIScreen.main.bounds.height * 0.03) // Adjust this value to position userInput
                 .textFieldStyle(RoundedBorderTextFieldStyle())
-                .padding()                                              // O. Leave alone.
                 .autocapitalization(.none)
 
         
             TextField("Enter star rating (0-5)", text: $viewModel.userInput4)
+                            .frame(width: UIScreen.main.bounds.width * 0.82)                // Set width to 92% of the screen width
                             .keyboardType(.numberPad)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
             
             
             TextField("Enter your comment here...", text: $viewModel.userInput2)
+                .frame(width: UIScreen.main.bounds.width * 0.92)                            // Set width to 92% of the screen width
                 .padding(.top, -30)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
                 .autocapitalization(.none)
                 .onChange(of: viewModel.userInput2) { newValue in
-                        if newValue.count > 60 {                        // Adjust the max character limit as needed
+                        if newValue.count > 60 {                                            // Adjust the max character limit as needed
                             viewModel.userInput2 = String(newValue.prefix(60))
                         }
                 }
