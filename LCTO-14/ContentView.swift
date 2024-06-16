@@ -1,4 +1,11 @@
 /*
+ Sun 6-16-24)1100
+ Test for bug in github ""LKGgit add . All txtfld & button positions OK! TODO Scroll ht too tall""
+  Could be excalmation points?? When committing _
+   git commit -m "LKG!! All txtfld & button positions OK! TODO Scroll ht too tall"
+  OR, could be terminal???
+  
+ 
  CV.swift
  LCTO-14
  See DT/LCTO-14.txt
