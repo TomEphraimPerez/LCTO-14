@@ -35,7 +35,7 @@ struct ContentView: View {
                 Image("shelves")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .opacity(0.2)                                                       // Set the opacity to 0.2
+                    .opacity(0.4)                                                       // Set the opacity to 0.3
                     .edgesIgnoringSafeArea(.all)                                        // Makes image fill the entire available space
 
                 
@@ -44,6 +44,7 @@ struct ContentView: View {
 
                 VStack {
                     TextField("Search for the product here...", text: $viewModel.userInput3)
+                        .padding(.top, 0.5)
                         .frame(width: UIScreen.main.bounds.width * 0.82)                // Set width to 82% of the screen width
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.none)
