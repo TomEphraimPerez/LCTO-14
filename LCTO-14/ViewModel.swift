@@ -29,6 +29,9 @@ final class ViewModel: ObservableObject {
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase
     }
 
+    
+                                                            // POST
+    
     func postComment(productName: String, comment: String, rating: String) {
         let record = CKRecord(recordType: "ProductComment")
         record["productName"] = productName
@@ -49,6 +52,8 @@ final class ViewModel: ObservableObject {
         }
     }
 
+    
+                                                            // SEARCH
     func fetchProductNames(searchTerm: String) {
         guard !searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             self.searchResults = []
@@ -76,6 +81,10 @@ final class ViewModel: ObservableObject {
         }
     }
 
+    
+    
+                                                            // CALCULATE RATINGS FOR STARS
+    
     func calculateAverageRating(for productName: String) {
         let predicate = NSPredicate(format: "productName == %@", productName)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
@@ -99,6 +108,8 @@ final class ViewModel: ObservableObject {
         }
     }
 
+    
+                                                            // ERROR HANDLING
     private func handleError(_ error: Error) {
         guard let ckError = error as? CKError else {
             print("Error: \(error.localizedDescription)")

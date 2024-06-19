@@ -44,6 +44,7 @@ struct ContentView: View {
 
                 VStack {
                     TextField("Search for the product here...", text: $viewModel.userInput3)
+                        .padding(.top, 0.5)
                         .frame(width: UIScreen.main.bounds.width * 0.82)                // Set width to 82% of the screen width
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.none)
@@ -70,21 +71,22 @@ struct ContentView: View {
                                     ForEach(viewModel.searchResults, id: \.self) { comment in
                                         Text(comment)
                                             .padding(.vertical, 4)                      // Reduced vertical padding
-                                            .frame(height: 20)                          // Explicit height for each comment
+                                            .frame(height: 20)                          // Comment explicit height
                                             .background(Color.gray.opacity(0.3))        // Was 0.3
                                             .cornerRadius(2)                            // Was 5.
                                     }
-                                }
-                                .frame(width: geometry.size.width, height: geometry.size.height * 2.5) // O=1.6->using 66% of available ht
-                                .border(Color.blue, width: 2)
+                                }           // CGPT favorably inadvertently fixed the 1st line-on-top prob: }} .frame }.frame.border
+                                .frame(width: geometry.size.width)  // Only fix width to the width of geometry to maintain alignment
                             }
-                        }
+                            .frame(height: geometry.size.height * 1.2)  // Adjust this value as needed for your design
+                            .border(Color.blue, width: 2)
+                    }
                     } else {
                         Text("No results found")
                             .font(.headline)
                     }
 
-                    Spacer()                                             // O. Keep. Maintains spacing bt sections if there are no results.
+                    Spacer()                                // O. Keep. Maintains spacing bt sections if there are no results.
 
                     
                     
