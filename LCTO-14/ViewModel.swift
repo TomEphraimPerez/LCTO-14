@@ -24,6 +24,8 @@ final class ViewModel: ObservableObject {
     @Published var searchResults: [String] = []
     @Published var searchMessage: String = ""
     @Published var averageRating: Double = 0.0
+    
+    //@Published private var comment = ""                                 // ?
 
     private var database: CKDatabase {
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase
@@ -36,7 +38,7 @@ final class ViewModel: ObservableObject {
         let record = CKRecord(recordType: "ProductComment")
         record["productName"] = productName
         record["comment"] = comment
-        record["Stars"] = Int(rating) ?? 0                            // Note training '0' after '??' OW er-> 'amniguous w/o more content'
+        record["Stars"] = Int(rating) ?? 0                  // Note training '0' after '??' OW er-> 'amniguous w/o more content'
         
         database.save(record) { [weak self] _, error in
             DispatchQueue.main.async {

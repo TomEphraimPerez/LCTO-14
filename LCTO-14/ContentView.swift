@@ -74,6 +74,11 @@ struct ContentView: View {
                                             .frame(height: 20)                          // Comment explicit height
                                             .background(Color.gray.opacity(0.3))        // Was 0.3
                                             .cornerRadius(2)                            // Was 5.
+                                            .frame(minWidth: 0,                         // This & nx 4 lines make good left justifd
+                                                   maxWidth: 300,
+                                                   minHeight: 0,
+                                                   maxHeight: .infinity,
+                                                   alignment: .topLeading)
                                     }
                                 }           // CGPT favorably inadvertently fixed the 1st line-on-top prob: }} .frame }.frame.border
                                 .frame(width: geometry.size.width)  // Only fix width to the width of geometry to maintain alignment
