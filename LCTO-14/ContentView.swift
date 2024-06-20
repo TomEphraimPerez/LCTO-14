@@ -24,7 +24,7 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: ViewModel
-    private let maxCharacters = 88                         // Adjust as needed for the comment field. = me and Karen. See li122
+    private let maxCharacters = 88                         // Adjust as needed for the comment field. = me and Karen. See li124 or..
 
     
     var body: some View {
@@ -50,7 +50,6 @@ struct ContentView: View {
                         .frame(width: UIScreen.main.bounds.width * 0.82)                // Set width to 82% of the screen width
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.none)
-
                     
                     Button("Search Product") {
                         viewModel.fetchProductNames(searchTerm: viewModel.userInput3)
@@ -70,7 +69,7 @@ struct ContentView: View {
                     if !viewModel.searchResults.isEmpty {
                         GeometryReader { geometry in
                             ScrollView {
-                                VStack(alignment: .leading) {
+                                VStack(alignment: .leading) { // using \.property is just shorthand for \Type.property. = KyPath.
                                     ForEach(viewModel.searchResults, id: \.self) { comment in
                                         Text(comment)
                                             .padding(.vertical, 4)                      // Reduced vertical padding
@@ -123,10 +122,12 @@ struct ContentView: View {
                                 viewModel.userInput2 = String(newValue.prefix(60))
                             }
                         }
+                    
                     Text("\(viewModel.userInput2.count)/\(maxCharacters) characters")
                         .font(.caption)
                         .foregroundColor(.gray)
-                        .padding(.bottom)
+                        .padding(.top, -35)             // NOW the counter is inside usrIP2 :) ALlows more room for COMMENTS :)
+                    
                     
                     Button("Post Comment") {
                         viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
