@@ -24,6 +24,8 @@ import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: ViewModel
+    private let maxCharacters = 88                         // Adjust as needed for the comment field. = me and Karen. See li122
+
     
     var body: some View {
         VStack {
@@ -121,7 +123,10 @@ struct ContentView: View {
                                 viewModel.userInput2 = String(newValue.prefix(60))
                             }
                         }
-
+                    Text("\(viewModel.userInput2.count)/\(maxCharacters) characters")
+                        .font(.caption)
+                        .foregroundColor(.gray)
+                        .padding(.bottom)
                     
                     Button("Post Comment") {
                         viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
