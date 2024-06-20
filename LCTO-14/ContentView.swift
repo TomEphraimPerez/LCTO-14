@@ -49,6 +49,7 @@ struct ContentView: View {
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.none)
 
+                    
                     Button("Search Product") {
                         viewModel.fetchProductNames(searchTerm: viewModel.userInput3)
                         viewModel.calculateAverageRating(for: viewModel.userInput3)
@@ -63,7 +64,7 @@ struct ContentView: View {
                             .foregroundColor(.red)
                             .padding()
                     }
-                    
+                                                                        // TEST WITH : Sample Product100
                     if !viewModel.searchResults.isEmpty {
                         GeometryReader { geometry in
                             ScrollView {
@@ -71,34 +72,29 @@ struct ContentView: View {
                                     ForEach(viewModel.searchResults, id: \.self) { comment in
                                         Text(comment)
                                             .padding(.vertical, 4)                      // Reduced vertical padding
-                                            .frame(height: 20)                          // Comment explicit height
-                                            .background(Color.gray.opacity(0.3))        // Was 0.3
-                                            .cornerRadius(2)                            // Was 5.
-                                            .frame(minWidth: 0,                         // This & nx 4 lines make good left justifd
-                                                   maxWidth: 300,
-                                                   minHeight: 0,
-                                                   maxHeight: .infinity,
-                                                   alignment: .topLeading)
+                                            .background(Color.gray.opacity(0.3))        // Background color with reduced opacity
+                                            .cornerRadius(2)                            // Rounded corners
+                                            .frame(maxWidth: 310, alignment: .leading) // Use maximum=>310 width & align txt to Lt!!! :)
                                     }
-                                }           // CGPT favorably inadvertently fixed the 1st line-on-top prob: }} .frame }.frame.border
-                                .frame(width: geometry.size.width)  // Only fix width to the width of geometry to maintain alignment
+                                }
                             }
-                            .frame(height: geometry.size.height * 1.2)  // Adjust this value as needed for your design
-                            .border(Color.blue, width: 2)
-                    }
+                            .frame(width: geometry.size.width, height: geometry.size.height * 1.2)  // Set the height as needed
+                            .border(Color.blue, width: 2)  // Blue border around the ScrollView
+                        }
                     } else {
                         Text("No results found")
                             .font(.headline)
                     }
 
-                    Spacer()                                // O. Keep. Maintains spacing bt sections if there are no results.
+
+                    Spacer()                                            // O. Keep. Maintains spacing bt sections if there are no results.
 
                     
                     
                                                             // P O S T
                     
                     TextField("Enter the product here...", text: $viewModel.userInput)
-                        //.padding(.top, -10.0)                          // Was -10.0 (0.7 cm abv usrIP 4)
+                        //.padding(.top, -10.0)                          // (0.7 cm abv usrIP 4)
                         .frame(width: UIScreen.main.bounds.width * 0.82) // Set width to 82% of the screen width
                         //.padding([.top], UIScreen.main.bounds.height * 0.16)  // Adds padding top, shifting txt fld dwn 16% of the scn ht
                         //.padding(.top, UIScreen.main.bounds.height * 0.2)     // Add x% of scn ht as top padding. If >>, button lowers too much
@@ -121,11 +117,12 @@ struct ContentView: View {
                         .padding()
                         .autocapitalization(.none)
                         .onChange(of: viewModel.userInput2) { newValue in
-                            if newValue.count > 60 {                                    // Adjust the max character limit as needed
+                            if newValue.count > 88 {                                    // Adjust the max character limit as needed
                                 viewModel.userInput2 = String(newValue.prefix(60))
                             }
                         }
 
+                    
                     Button("Post Comment") {
                         viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
                     }
@@ -139,6 +136,7 @@ struct ContentView: View {
         .padding()
     }
 }
+
 
 
                                                             // STARS
