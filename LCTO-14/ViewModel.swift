@@ -16,6 +16,8 @@
 import Foundation
 import CloudKit
 
+import UIKit                                                                                            //
+
 final class ViewModel: ObservableObject {
     @Published var userInput: String = ""
     @Published var userInput2: String = ""
@@ -25,12 +27,11 @@ final class ViewModel: ObservableObject {
     @Published var searchMessage: String = ""
     @Published var averageRating: Double = 0.0
     
-    //@Published private var comment = ""                                 // ?
 
     private var database: CKDatabase {
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase
     }
-
+    
     
                                                             // POST
     
@@ -66,7 +67,25 @@ final class ViewModel: ObservableObject {
             return
         }
 
-        let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)
+        let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)    // O. OK, just case-sensitive. %@ see blw.
+        // ||=  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =  =||
+        // let predicate = NSPredicate(format: "productName lowercased(CONTAINS  %@")                   // No
+        //let predicate = NSPredicate(format: "productName CONTAINS[c] (IN, %@", searchTerm)            // Apple bug. ...
+        //let predicate = NSPredicate(format: "productName CONTAINS[c] (IN, ANY) %@", searchTerm)       // OSX/XC BUG W/WO [C]
+        // let predicate = NSPredicate(format: "productName BEGINSWITH %@".lowercased(), searchTerm)    // No
+        // let predicate = NSPredicate(format: "productName contains(_:) %@", searchTerm)               //  Fails.
+        // let trimmedSearchTerm = searchTerm.trimmingCharacters(in: .whitespacesAndNewlines)
+        // let predicate = NSPredicate(format: "productName CONTAINS[c] %@", trimmedSearchTerm)
+        // SELF in the format string means each individual element in the array.
+        //   let containPredicate = NSPredicate(format: "SELF CONTAINS %@", "Kim")
+        /* For Xc version 16. >>>
+           @Query(filter: #Predicate<Movie> { movie in
+           movie.name.localizedStandardContains("JAWS")
+           }) var movies: [Movie]
+         */
+        //let predicate = NSPredicate(format: "productName CONTAINS  %@", searchTerm) // Rtns NOTHING w "CONTAINS" sans [c]. OW CRASH.
+        //let predicate = NSPredicate(format: "productName.localizedStandardContains %@", searchTerm)   // ??? >>> NO.
+        
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
         
         database.perform(query, inZoneWith: nil) { [weak self] records, error in
@@ -126,3 +145,11 @@ final class ViewModel: ObservableObject {
         }
     }
 }
+
+/**
+ Format specifiers:
+ %d - int Value
+ %f - float value
+ %ld - long value
+ %@ - string value and for many more.
+ */

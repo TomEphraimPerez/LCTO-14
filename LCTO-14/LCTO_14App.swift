@@ -26,9 +26,11 @@
 
 // Xcode 14.2
 import SwiftUI                                              // Already present in CV.swift
+import Foundation
 
 @main
 struct LCTO_14App: App {
+    
     var viewModel = ViewModel()                             // Create a ViewModel instance
 
     var body: some Scene {

@@ -37,7 +37,7 @@ struct ContentView: View {
                 Image("shelves")
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .opacity(0.2)                                                       // Set the opacity to 0.2
+                    .opacity(0.4)                                                       // Set the opacity to 0.4
                     .edgesIgnoringSafeArea(.all)                                        // Makes image fill the entire available space
 
                 
@@ -50,7 +50,7 @@ struct ContentView: View {
                         .frame(width: UIScreen.main.bounds.width * 0.82)                // Set width to 82% of the screen width
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.none)
-                    
+                        
                     Button("Search Product") {
                         viewModel.fetchProductNames(searchTerm: viewModel.userInput3)
                         viewModel.calculateAverageRating(for: viewModel.userInput3)
@@ -64,6 +64,7 @@ struct ContentView: View {
                         Text(viewModel.searchMessage)
                             .foregroundColor(.red)
                             .padding()
+                            .bold()
                     }
                                                                         // TEST WITH : Sample Product100
                     if !viewModel.searchResults.isEmpty {
