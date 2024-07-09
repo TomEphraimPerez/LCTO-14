@@ -20,37 +20,30 @@
 
 */
 
+
+
+/* Mon 7-8-24)1653
+ Everything seems to work now. Thank you. There is one problem however that I see at this time. Ie., I can not search for any product in the CK DB. I get returned the following error : "Search error: Invalid predicate: Predicate comparison options are not supported for expression: productName CONTAINS[c]".
+ */
 import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: ViewModel
-    private let maxCharacters = 88                         // Adjust as needed for the comment field. = me and Karen. See li124 or..
+    private let maxCharacters = 88
 
-    
     var body: some View {
-        VStack {
+        VStack(spacing: 20) {
             StarView(rating: viewModel.averageRating)
                 .padding(.top, -30)
-
-            ZStack {
-                                                                                        // Placing the background under the rest of the UI
-                Image("shelves")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .opacity(0.4)                                                       // Set the opacity to 0.4
-                    .edgesIgnoringSafeArea(.all)                                        // Makes image fill the entire available space
-
-                
-                
-                                                            // S E A R C H
-
-                VStack {
+            
+            ScrollView {
+                VStack(spacing: 20) {
                     TextField("Search for the product here...", text: $viewModel.userInput3)
                         .padding(.top, 0.5)
-                        .frame(width: UIScreen.main.bounds.width * 0.82)                // Set width to 82% of the screen width
+                        .frame(width: UIScreen.main.bounds.width * 0.82)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
                         .autocapitalization(.none)
-                        
+                    
                     Button("Search Product") {
                         viewModel.fetchProductNames(searchTerm: viewModel.userInput3)
                         viewModel.calculateAverageRating(for: viewModel.userInput3)
@@ -66,87 +59,78 @@ struct ContentView: View {
                             .padding()
                             .bold()
                     }
-                                                                        // TEST WITH : Sample Product100
+                    
                     if !viewModel.searchResults.isEmpty {
                         GeometryReader { geometry in
                             ScrollView {
-                                VStack(alignment: .leading) { // using \.property is just shorthand for \Type.property. = KyPath.
+                                VStack(alignment: .leading) {
                                     ForEach(viewModel.searchResults, id: \.self) { comment in
                                         Text(comment)
-                                            .padding(.vertical, 4)                      // Reduced vertical padding
-                                            .background(Color.gray.opacity(0.3))        // Background color with reduced opacity
-                                            .cornerRadius(2)                            // Rounded corners
-                                            .frame(maxWidth: 310, alignment: .leading) // Use maximum=>310 width & align txt to Lt!!! :)
+                                            .padding(.vertical, 4)
+                                            .background(Color.gray.opacity(0.3))
+                                            .cornerRadius(2)
+                                            .frame(maxWidth: geometry.size.width, alignment: .leading)
                                     }
                                 }
                             }
-                            .frame(width: geometry.size.width, height: geometry.size.height * 1.2)  // Set the height as needed
-                            .border(Color.blue, width: 2)  // Blue border around the ScrollView
+                            .frame(height: geometry.size.height * 0.5)
+                            .border(Color.blue, width: 2)
                         }
                     } else {
                         Text("No results found")
                             .font(.headline)
                     }
-
-
-                    Spacer()                                            // O. Keep. Maintains spacing bt sections if there are no results.
-
                     
-                    
-                                                            // P O S T
-                    
-                    TextField("Enter the product here...", text: $viewModel.userInput)
-                        //.padding(.top, -10.0)                          // (0.7 cm abv usrIP 4)
-                        .frame(width: UIScreen.main.bounds.width * 0.82) // Set width to 82% of the screen width
-                        //.padding([.top], UIScreen.main.bounds.height * 0.16)  // Adds padding top, shifting txt fld dwn 16% of the scn ht
-                        //.padding(.top, UIScreen.main.bounds.height * 0.2)     // Add x% of scn ht as top padding. If >>, button lowers too much
-                        .offset(y: UIScreen.main.bounds.height * 0.03)   // Adjust this value to position userInput
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .autocapitalization(.none)
+                    Spacer()
 
-                    
-                    TextField("Enter star rating (0-5)", text: $viewModel.userInput4)
-                        .frame(width: UIScreen.main.bounds.width * 0.82)                // Set width to 82% of the screen width
-                        .keyboardType(.numberPad)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding()
+                    VStack(spacing: 10) {
+                        TextField("Enter the product here...", text: $viewModel.userInput)
+                            .frame(width: UIScreen.main.bounds.width * 0.82)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .autocapitalization(.none)
 
-                    
-                    TextField("Enter your comment here...", text: $viewModel.userInput2)
-                        .frame(width: UIScreen.main.bounds.width * 0.92)
-                        .padding(.top, -30)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .padding()
-                        .autocapitalization(.none)
-                        .onChange(of: viewModel.userInput2) { newValue in
-                            if newValue.count > 88 {                                    // Adjust the max character limit as needed
-                                viewModel.userInput2 = String(newValue.prefix(60))
+                        TextField("Enter star rating (0-5)", text: $viewModel.userInput4)
+                            .frame(width: UIScreen.main.bounds.width * 0.82)
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding()
+
+                        TextField("Enter your comment here...", text: $viewModel.userInput2)
+                            .frame(width: UIScreen.main.bounds.width * 0.92)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding()
+                            .autocapitalization(.none)
+                            .onChange(of: viewModel.userInput2) { newValue in
+                                if newValue.count > maxCharacters {
+                                    viewModel.userInput2 = String(newValue.prefix(maxCharacters))
+                                }
                             }
+
+                        Text("\(viewModel.userInput2.count)/\(maxCharacters) characters")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        
+                        Button(action: {
+                            viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
+                        }) {
+                            Text("Post Comment")
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
                         }
-                    
-                    Text("\(viewModel.userInput2.count)/\(maxCharacters) characters")
-                        .font(.caption)
-                        .foregroundColor(.gray)
-                        .padding(.top, -35)             // NOW the counter is inside usrIP2 :) ALlows more room for COMMENTS :)
-                    
-                    
-                    Button("Post Comment") {
-                        viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
                     }
-                    .padding()
-                    .background(Color.blue)
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
                 }
             }
         }
         .padding()
+        .background(Image("shelves").resizable().aspectRatio(contentMode: .fill).opacity(0.4).edgesIgnoringSafeArea(.all))
+        .onTapGesture {
+            hideKeyboard()
+        }
     }
 }
 
-
-
-                                                            // STARS
 struct StarView: View {
     var rating: Double
 
@@ -167,3 +151,11 @@ struct StarView: View {
         }
     }
 }
+
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
+

@@ -13,10 +13,14 @@
 
 */
 
+
+
+/* Mon 7-8-24)1653
+ Everything seems to work now. Thank you. There is one problem however that I see at this time. Ie., I can not search for any product in the CK DB. I get returned the following error : "Search error: Invalid predicate: Predicate comparison options are not supported for expression: productName CONTAINS[c]".
+ */
 import Foundation
 import CloudKit
-
-import UIKit                                                                                            //
+import UIKit
 
 final class ViewModel: ObservableObject {
     @Published var userInput: String = ""
@@ -26,20 +30,16 @@ final class ViewModel: ObservableObject {
     @Published var searchResults: [String] = []
     @Published var searchMessage: String = ""
     @Published var averageRating: Double = 0.0
-    
 
     private var database: CKDatabase {
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase
     }
-    
-    
-                                                            // POST
-    
+
     func postComment(productName: String, comment: String, rating: String) {
         let record = CKRecord(recordType: "ProductComment")
         record["productName"] = productName
         record["comment"] = comment
-        record["Stars"] = Int(rating) ?? 0                  // Note training '0' after '??' OW er-> 'amniguous w/o more content'
+        record["Stars"] = Int(rating) ?? 0
         
         database.save(record) { [weak self] _, error in
             DispatchQueue.main.async {
@@ -55,8 +55,6 @@ final class ViewModel: ObservableObject {
         }
     }
 
-    
-                                                            // SEARCH
     func fetchProductNames(searchTerm: String) {
         guard !searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             self.searchResults = []
@@ -67,27 +65,9 @@ final class ViewModel: ObservableObject {
             return
         }
 
-        let predicate = NSPredicate(format: "productName BEGINSWITH %@", searchTerm)    // O. OK, just case-sensitive. %@ see blw.
-        // ||=  =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =   =  =||
-        // let predicate = NSPredicate(format: "productName lowercased(CONTAINS  %@")                   // No
-        //let predicate = NSPredicate(format: "productName CONTAINS[c] (IN, %@", searchTerm)            // Apple bug. ...
-        //let predicate = NSPredicate(format: "productName CONTAINS[c] (IN, ANY) %@", searchTerm)       // OSX/XC BUG W/WO [C]
-        // let predicate = NSPredicate(format: "productName BEGINSWITH %@".lowercased(), searchTerm)    // No
-        // let predicate = NSPredicate(format: "productName contains(_:) %@", searchTerm)               //  Fails.
-        // let trimmedSearchTerm = searchTerm.trimmingCharacters(in: .whitespacesAndNewlines)
-        // let predicate = NSPredicate(format: "productName CONTAINS[c] %@", trimmedSearchTerm)
-        // SELF in the format string means each individual element in the array.
-        //   let containPredicate = NSPredicate(format: "SELF CONTAINS %@", "Kim")
-        /* For Xc version 16. >>>
-           @Query(filter: #Predicate<Movie> { movie in
-           movie.name.localizedStandardContains("JAWS")
-           }) var movies: [Movie]
-         */
-        //let predicate = NSPredicate(format: "productName CONTAINS  %@", searchTerm) // Rtns NOTHING w "CONTAINS" sans [c]. OW CRASH.
-        //let predicate = NSPredicate(format: "productName.localizedStandardContains %@", searchTerm)   // ??? >>> NO.
-        
+        let predicate = NSPredicate(format: "productName CONTAINS[c] %@", searchTerm)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
-        
+
         database.perform(query, inZoneWith: nil) { [weak self] records, error in
             DispatchQueue.main.async {
                 if let error = error {
@@ -102,10 +82,6 @@ final class ViewModel: ObservableObject {
         }
     }
 
-    
-    
-                                                            // CALCULATE RATINGS FOR STARS
-    
     func calculateAverageRating(for productName: String) {
         let predicate = NSPredicate(format: "productName == %@", productName)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
@@ -129,8 +105,6 @@ final class ViewModel: ObservableObject {
         }
     }
 
-    
-                                                            // ERROR HANDLING
     private func handleError(_ error: Error) {
         guard let ckError = error as? CKError else {
             print("Error: \(error.localizedDescription)")
@@ -145,6 +119,7 @@ final class ViewModel: ObservableObject {
         }
     }
 }
+
 
 /**
  Format specifiers:
