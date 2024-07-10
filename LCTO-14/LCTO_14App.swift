@@ -24,6 +24,12 @@
 // SO try/ - according to https://chatgpt.com/c/e169c3d8-c57b-4a51-bdef-6170294850d3 in
   // "If Using @EnvironmentObject" § toward the end.
 
+
+
+
+/* Mon 7-8-24)1653
+ Everything seems to work now. Thank you. There is one problem however that I see at this time. Ie., I can not search for any product in the CK DB. I get returned the following error : "Search error: Invalid predicate: Predicate comparison options are not supported for expression: productName CONTAINS[c]".
+ */
 // Xcode 14.2
 import SwiftUI                                              // Already present in CV.swift
 import Foundation
@@ -40,6 +46,5 @@ struct LCTO_14App: App {
         }
     }
 }                                        // SEARCH FOR ->   5-24-24)1600  , = search obj wh has a comment
-
 // //
 

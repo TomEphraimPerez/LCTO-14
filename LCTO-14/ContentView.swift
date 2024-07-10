@@ -22,9 +22,6 @@
 
 
 
-/* Mon 7-8-24)1653
- Everything seems to work now. Thank you. There is one problem however that I see at this time. Ie., I can not search for any product in the CK DB. I get returned the following error : "Search error: Invalid predicate: Predicate comparison options are not supported for expression: productName CONTAINS[c]".
- */
 import SwiftUI
 
 struct ContentView: View {
@@ -42,7 +39,6 @@ struct ContentView: View {
                         .padding(.top, 0.5)
                         .frame(width: UIScreen.main.bounds.width * 0.82)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .autocapitalization(.none)
                     
                     Button("Search Product") {
                         viewModel.fetchProductNames(searchTerm: viewModel.userInput3)
@@ -61,21 +57,19 @@ struct ContentView: View {
                     }
                     
                     if !viewModel.searchResults.isEmpty {
-                        GeometryReader { geometry in
-                            ScrollView {
-                                VStack(alignment: .leading) {
-                                    ForEach(viewModel.searchResults, id: \.self) { comment in
-                                        Text(comment)
-                                            .padding(.vertical, 4)
-                                            .background(Color.gray.opacity(0.3))
-                                            .cornerRadius(2)
-                                            .frame(maxWidth: geometry.size.width, alignment: .leading)
-                                    }
-                                }
+                        VStack(alignment: .leading) {
+                            ForEach(viewModel.searchResults, id: \.self) { comment in
+                                Text(comment)
+                                    .padding(.vertical, 4)
+                                    .background(Color.gray.opacity(0.3))
+                                    .cornerRadius(2)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
-                            .frame(height: geometry.size.height * 0.5)
-                            .border(Color.blue, width: 2)
                         }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .shadow(radius: 10)
                     } else {
                         Text("No results found")
                             .font(.headline)
@@ -87,7 +81,6 @@ struct ContentView: View {
                         TextField("Enter the product here...", text: $viewModel.userInput)
                             .frame(width: UIScreen.main.bounds.width * 0.82)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
-                            .autocapitalization(.none)
 
                         TextField("Enter star rating (0-5)", text: $viewModel.userInput4)
                             .frame(width: UIScreen.main.bounds.width * 0.82)
@@ -99,7 +92,6 @@ struct ContentView: View {
                             .frame(width: UIScreen.main.bounds.width * 0.92)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
-                            .autocapitalization(.none)
                             .onChange(of: viewModel.userInput2) { newValue in
                                 if newValue.count > maxCharacters {
                                     viewModel.userInput2 = String(newValue.prefix(maxCharacters))
@@ -131,31 +123,17 @@ struct ContentView: View {
     }
 }
 
-struct StarView: View {
-    var rating: Double
-
-    var body: some View {
-        HStack {
-            ForEach(0..<5) { index in
-                Image(systemName: starType(index: index))
-                    .foregroundColor(index < Int(rating) ? .yellow : .gray)
-            }
-        }
-    }
-    
-    private func starType(index: Int) -> String {
-        if Double(index) < rating {
-            return index + 1 <= Int(rating) ? "star.fill" : "star.leadinghalf.fill"
-        } else {
-            return "star"
-        }
-    }
-}
-
 extension View {
     func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView().environmentObject(ViewModel())
+    }
+}
+
 
 

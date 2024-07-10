@@ -15,12 +15,9 @@
 
 
 
-/* Mon 7-8-24)1653
- Everything seems to work now. Thank you. There is one problem however that I see at this time. Ie., I can not search for any product in the CK DB. I get returned the following error : "Search error: Invalid predicate: Predicate comparison options are not supported for expression: productName CONTAINS[c]".
- */
 import Foundation
 import CloudKit
-import UIKit
+import SwiftUI
 
 final class ViewModel: ObservableObject {
     @Published var userInput: String = ""
@@ -56,7 +53,7 @@ final class ViewModel: ObservableObject {
     }
 
     func fetchProductNames(searchTerm: String) {
-        guard !searchTerm.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+        guard !searchTerm.isEmpty else {
             self.searchResults = []
             self.searchMessage = "Please enter a search term."
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
@@ -65,8 +62,9 @@ final class ViewModel: ObservableObject {
             return
         }
 
-        let predicate = NSPredicate(format: "productName CONTAINS[c] %@", searchTerm)
+        let predicate = NSPredicate(format: "productName == %@", searchTerm)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+        print("Performing query with search term: \(searchTerm)")
 
         database.perform(query, inZoneWith: nil) { [weak self] records, error in
             DispatchQueue.main.async {
@@ -74,9 +72,30 @@ final class ViewModel: ObservableObject {
                     print("Search error: \(error.localizedDescription)")
                     self?.searchResults = []
                 } else {
-                    let comments = records?.compactMap { $0["comment"] as? String } ?? []
-                    self?.searchResults = Array(Set(comments))
+                    guard let records = records else {
+                        print("No records fetched.")
+                        self?.searchResults = []
+                        return
+                    }
+                    print("Records fetched: \(records.count)")
+                    
+                    let comments = records.compactMap { record -> String? in
+                        if let comment = record["comment"] as? String {
+                            print("Comment found: \(comment)")
+                            return comment
+                        }
+                        return nil
+                    }
+                    
+                    print("Comments found: \(comments)")
+                    self?.searchResults = comments
                     print("Search complete. Found: \(self?.searchResults ?? [])")
+                    
+                    if self?.searchResults.isEmpty == true {
+                        self?.searchMessage = "No results found"
+                    } else {
+                        self?.searchMessage = ""
+                    }
                 }
             }
         }
@@ -119,6 +138,34 @@ final class ViewModel: ObservableObject {
         }
     }
 }
+
+struct StarView: View {
+    var rating: Double
+
+    var body: some View {
+        HStack {
+            ForEach(0..<5) { index in
+                Image(systemName: starType(index: index))
+                    .foregroundColor(index < Int(rating) ? .yellow : .gray)
+            }
+        }
+    }
+    
+    private func starType(index: Int) -> String {
+        if Double(index) < rating {
+            return index + 1 <= Int(rating) ? "star.fill" : "star.leadinghalf.fill"
+        } else {
+            return "star"
+        }
+    }
+}
+
+struct StarView_Previews: PreviewProvider {
+    static var previews: some View {
+        StarView(rating: 3.5)
+    }
+}
+
 
 
 /**
