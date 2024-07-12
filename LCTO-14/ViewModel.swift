@@ -51,7 +51,7 @@ final class ViewModel: ObservableObject {
             }
         }
     }
-
+    
     func fetchProductNames(searchTerm: String) {
         guard !searchTerm.isEmpty else {
             self.searchResults = []
@@ -62,7 +62,7 @@ final class ViewModel: ObservableObject {
             return
         }
 
-        let predicate = NSPredicate(format: "productName == %@", searchTerm)
+        let predicate = NSPredicate(value: true) // Fetch all records
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
         print("Performing query with search term: \(searchTerm)")
 
@@ -80,7 +80,9 @@ final class ViewModel: ObservableObject {
                     print("Records fetched: \(records.count)")
                     
                     let comments = records.compactMap { record -> String? in
-                        if let comment = record["comment"] as? String {
+                        if let productName = record["productName"] as? String,
+                           let comment = record["comment"] as? String,
+                           productName.lowercased().hasPrefix(searchTerm.lowercased()) {
                             print("Comment found: \(comment)")
                             return comment
                         }
@@ -100,6 +102,7 @@ final class ViewModel: ObservableObject {
             }
         }
     }
+
 
     func calculateAverageRating(for productName: String) {
         let predicate = NSPredicate(format: "productName == %@", productName)

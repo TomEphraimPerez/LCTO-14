@@ -27,7 +27,7 @@
 
 
 
-/* Mon 7-8-24)1653
+/* Mon 7-8-24)1653  ->>> Good for LKG+++++ (5 '+'s! on Jul10-24)
  Everything seems to work now. Thank you. There is one problem however that I see at this time. Ie., I can not search for any product in the CK DB. I get returned the following error : "Search error: Invalid predicate: Predicate comparison options are not supported for expression: productName CONTAINS[c]".
  */
 // Xcode 14.2
