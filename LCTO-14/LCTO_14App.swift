@@ -1,6 +1,7 @@
+//
+// Copyright © 2024 bundle LCTO -14
 /*
- 
- LCTO_14App.swift
+ VM.swift
  LCTO-14
  See DT/LCTO-14.txt
 
@@ -10,7 +11,8 @@
  DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
  Other Ap = pass to sim
  Record_Type = ProductComment
-    Can't use exclamation points on comments
+ Can't use exclamation points on comments
+
 */
 /*
  https://developer.apple.com/forums/thread/750845
@@ -25,11 +27,6 @@
   // "If Using @EnvironmentObject" § toward the end.
 
 
-
-
-/* Mon 7-8-24)1653  ->>> Good for LKG+++++ (5 '+'s! on Jul10-24)
- Everything seems to work now. Thank you. There is one problem however that I see at this time. Ie., I can not search for any product in the CK DB. I get returned the following error : "Search error: Invalid predicate: Predicate comparison options are not supported for expression: productName CONTAINS[c]".
- */
 // Xcode 14.2
 import SwiftUI                                              // Already present in CV.swift
 import Foundation

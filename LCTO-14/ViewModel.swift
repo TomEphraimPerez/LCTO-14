@@ -1,3 +1,5 @@
+//
+// Copyright © 2024 bundle LCTO -14
 /*
  VM.swift
  LCTO-14
@@ -12,7 +14,6 @@
  Can't use exclamation points on comments
 
 */
-
 
 
 import Foundation
