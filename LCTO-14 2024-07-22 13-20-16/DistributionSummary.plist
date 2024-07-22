@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>LCTO-14.ipa</key>
+	<array>
+		<dict>
+			<key>architectures</key>
+			<array>
+				<string>arm64</string>
+			</array>
+			<key>bitcode</key>
+			<false/>
+			<key>buildNumber</key>
+			<string>5</string>
+			<key>certificate</key>
+			<dict>
+				<key>SHA1</key>
+				<string>63B1DA20311E99A0137B58C8E665F2586111B2A2</string>
+				<key>dateExpires</key>
+				<string>7/15/25</string>
+				<key>type</key>
+				<string>Cloud Managed Apple Distribution</string>
+			</dict>
+			<key>entitlements</key>
+			<dict>
+				<key>application-identifier</key>
+				<string>C3UM93CB4Q.com.tomEphraimPerez.LCTO-14</string>
+				<key>aps-environment</key>
+				<string>production</string>
+				<key>beta-reports-active</key>
+				<true/>
+				<key>com.apple.developer.icloud-container-environment</key>
+				<string>Production</string>
+				<key>com.apple.developer.icloud-container-identifiers</key>
+				<array/>
+				<key>com.apple.developer.icloud-services</key>
+				<array>
+					<string>CloudKit</string>
+				</array>
+				<key>com.apple.developer.team-identifier</key>
+				<string>C3UM93CB4Q</string>
+				<key>com.apple.developer.ubiquity-kvstore-identifier</key>
+				<string>C3UM93CB4Q.com.tomEphraimPerez.LCTO-14</string>
+				<key>get-task-allow</key>
+				<false/>
+			</dict>
+			<key>name</key>
+			<string>LCTO-14.app</string>
+			<key>profile</key>
+			<dict>
+				<key>UUID</key>
+				<string>da9a3b5a-e1a6-48f5-9623-43fa67f79586</string>
+				<key>dateExpires</key>
+				<string>7/15/25</string>
+				<key>name</key>
+				<string>iOS Team Store Provisioning Profile: com.tomEphraimPerez.LCTO-14</string>
+			</dict>
+			<key>symbols</key>
+			<true/>
+			<key>team</key>
+			<dict>
+				<key>id</key>
+				<string>C3UM93CB4Q</string>
+				<key>name</key>
+				<string>Thomas Perez</string>
+			</dict>
+			<key>versionNumber</key>
+			<string>1.0</string>
+		</dict>
+	</array>
+</dict>
+</plist>

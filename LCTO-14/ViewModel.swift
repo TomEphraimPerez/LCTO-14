@@ -150,7 +150,7 @@ struct StarView: View {
         HStack {
             ForEach(0..<5) { index in
                 Image(systemName: starType(index: index))
-                    .foregroundColor(index < Int(rating) ? .yellow : .gray)
+                    .foregroundColor(index < Int(rating) ? .red : .gray)     // O = .yellow
             }
         }
     }
