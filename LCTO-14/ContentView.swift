@@ -25,7 +25,7 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 20) {
             StarView(rating: viewModel.averageRating)
-                .padding(.top, -30)
+                .padding(.top, -15)                                 // O = -30! -15 is OK : )
             
             ScrollView {
                 VStack(spacing: 20) {
