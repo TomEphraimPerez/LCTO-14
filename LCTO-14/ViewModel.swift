@@ -15,7 +15,7 @@
 
 */
 
-
+                                                                // IMAGES BRANCH
 import Foundation
 import CloudKit
 import SwiftUI
@@ -28,6 +28,8 @@ final class ViewModel: ObservableObject {
     @Published var searchResults: [String] = []
     @Published var searchMessage: String = ""
     @Published var averageRating: Double = 0.0
+    @Published var beforeImage: UIImage? = nil
+    @Published var afterImage: UIImage? = nil
 
     private var database: CKDatabase {
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase
@@ -38,6 +40,13 @@ final class ViewModel: ObservableObject {
         record["productName"] = productName
         record["comment"] = comment
         record["Stars"] = Int(rating) ?? 0
+
+        if let beforeImage = beforeImage, let afterImage = afterImage {
+            let beforeImageAsset = CKAsset(fileURL: saveImageToTemporaryURL(image: beforeImage))
+            let afterImageAsset = CKAsset(fileURL: saveImageToTemporaryURL(image: afterImage))
+            record["beforeImage"] = beforeImageAsset
+            record["afterImage"] = afterImageAsset
+        }
         
         database.save(record) { [weak self] _, error in
             DispatchQueue.main.async {
@@ -48,6 +57,8 @@ final class ViewModel: ObservableObject {
                     self?.userInput = ""
                     self?.userInput2 = ""
                     self?.userInput4 = ""
+                    self?.beforeImage = nil
+                    self?.afterImage = nil
                 }
             }
         }
@@ -104,7 +115,6 @@ final class ViewModel: ObservableObject {
         }
     }
 
-
     func calculateAverageRating(for productName: String) {
         let predicate = NSPredicate(format: "productName == %@", productName)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
@@ -128,6 +138,23 @@ final class ViewModel: ObservableObject {
         }
     }
 
+    func pickImage(isBeforeImage: Bool) {
+        let selectedImage = UIImage(systemName: "photo") // Placeholder for actual image selection logic.
+        
+        if isBeforeImage {
+            beforeImage = selectedImage
+        } else {
+            afterImage = selectedImage
+        }
+    }
+
+    private func saveImageToTemporaryURL(image: UIImage) -> URL {
+        let data = image.jpegData(compressionQuality: 0.8)!
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".jpg")
+        try? data.write(to: url)
+        return url
+    }
+
     private func handleError(_ error: Error) {
         guard let ckError = error as? CKError else {
             print("Error: \(error.localizedDescription)")
@@ -143,32 +170,7 @@ final class ViewModel: ObservableObject {
     }
 }
 
-struct StarView: View {
-    var rating: Double
 
-    var body: some View {
-        HStack {
-            ForEach(0..<5) { index in
-                Image(systemName: starType(index: index))
-                    .foregroundColor(index < Int(rating) ? .red : .gray)     // O = .yellow
-            }
-        }
-    }
-    
-    private func starType(index: Int) -> String {
-        if Double(index) < rating {
-            return index + 1 <= Int(rating) ? "star.fill" : "star.leadinghalf.fill"
-        } else {
-            return "star"
-        }
-    }
-}
-
-struct StarView_Previews: PreviewProvider {
-    static var previews: some View {
-        StarView(rating: 3.5)
-    }
-}
 
 
 

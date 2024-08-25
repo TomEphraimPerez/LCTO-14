@@ -15,7 +15,7 @@
 
 */
 
-
+                                                                    // IMAGES BRA
 import SwiftUI
 
 struct ContentView: View {
@@ -25,7 +25,7 @@ struct ContentView: View {
     var body: some View {
         VStack(spacing: 20) {
             StarView(rating: viewModel.averageRating)
-                .padding(.top, -15)                                 // O = -30! -15 is OK : )
+                .padding(.top, -15) // Adjust padding as needed
             
             ScrollView {
                 VStack(spacing: 20) {
@@ -105,6 +105,46 @@ struct ContentView: View {
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
                         }
+                        
+                        // Image buttons
+                        Button(action: {
+                            viewModel.pickImage(isBeforeImage: true)
+                        }) {
+                            Text("Pick Before Image")
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        
+                        Button(action: {
+                            viewModel.pickImage(isBeforeImage: false)
+                        }) {
+                            Text("Pick After Image")
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
+                        }
+                        
+                        // Display selected images
+                        if let beforeImage = viewModel.beforeImage {
+                            Image(uiImage: beforeImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 200)
+                                .cornerRadius(10)
+                                .padding()
+                        }
+                        
+                        if let afterImage = viewModel.afterImage {
+                            Image(uiImage: afterImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 200)
+                                .cornerRadius(10)
+                                .padding()
+                        }
                     }
                 }
             }
@@ -123,11 +163,35 @@ extension View {
     }
 }
 
+struct StarView: View {
+    var rating: Double
+
+    var body: some View {
+        HStack {
+            ForEach(0..<5) { index in
+                Image(systemName: starType(index: index))
+                    .foregroundColor(index < Int(rating) ? .yellow : .gray)
+            }
+        }
+    }
+    
+    private func starType(index: Int) -> String {
+        if Double(index) < rating {
+            return index + 1 <= Int(rating) ? "star.fill" : "star.leadinghalf.fill"
+        } else {
+            return "star"
+        }
+    }
+}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView().environmentObject(ViewModel())
     }
 }
+
+
+
 
 
 
