@@ -94,7 +94,8 @@ struct ContentView: View {
 
                         Text("\(viewModel.userInput2.count)/\(maxCharacters) characters")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(.black)
+                            .padding(.vertical, -6) // Adjust this value to increase the height slightly
                         
                         Button(action: {
                             viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
