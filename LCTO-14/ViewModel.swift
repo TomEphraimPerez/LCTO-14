@@ -64,6 +64,8 @@ final class ViewModel: ObservableObject {
         }
     }
     
+    
+/*                                                          ORIGINAL = OK, exc only FETCHES 1st 100 RECORDS ONLY!   Sun 8-25-24)1435
     func fetchProductNames(searchTerm: String) {
         guard !searchTerm.isEmpty else {
             self.searchResults = []
@@ -114,7 +116,81 @@ final class ViewModel: ObservableObject {
             }
         }
     }
+*/  // <<<     END      END    ORIGINAL = OK, exc only FETCHES 1st 100 RECORDS ONLY!   Sun 8-25-24)1435     <<<
+    func fetchProductNames(searchTerm: String) {
+        guard !searchTerm.isEmpty else {
+            DispatchQueue.main.async {
+                self.searchResults = []
+                self.searchMessage = "Please enter a search term."
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.searchMessage = ""
+            }
+            return
+        }
 
+        var allComments: [String] = []
+
+        func fetchAllRecords(with cursor: CKQueryOperation.Cursor? = nil) {
+            let operation: CKQueryOperation
+            
+            if let cursor = cursor {
+                operation = CKQueryOperation(cursor: cursor)
+            } else {
+                let predicate = NSPredicate(value: true) // Fetch all records
+                let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+                operation = CKQueryOperation(query: query)
+            }
+            
+            operation.recordFetchedBlock = { record in
+                if let productName = record["productName"] as? String,
+                   let comment = record["comment"] as? String,
+                   productName.lowercased().contains(searchTerm.lowercased()) {
+                    allComments.append(comment)
+                }
+            }
+            
+            operation.queryCompletionBlock = { [weak self] cursor, error in
+                if let error = error {
+                    DispatchQueue.main.async {
+                        print("Error fetching records: \(error.localizedDescription)")
+                        self?.searchResults = []
+                    }
+                    return
+                }
+                
+                if let cursor = cursor {
+                    // Continue fetching the next batch
+                    fetchAllRecords(with: cursor)
+                } else {
+                    // No more records, update the UI on the main thread
+                    DispatchQueue.main.async {
+                        print("All records fetched: \(allComments.count) comments")
+                        self?.searchResults = allComments
+                        
+                        if self?.searchResults.isEmpty == true {
+                            self?.searchMessage = "No results found"
+                        } else {
+                            self?.searchMessage = ""
+                        }
+                    }
+                }
+            }
+            
+            database.add(operation)
+        }
+
+        // Start fetching records
+        fetchAllRecords()
+    }
+
+
+
+
+    
+    
+    
+    
     func calculateAverageRating(for productName: String) {
         let predicate = NSPredicate(format: "productName == %@", productName)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
