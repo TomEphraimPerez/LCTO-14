@@ -1,4 +1,4 @@
-
+//
 // Copyright © 2024 bundle LCTO -14
 /*
  VM.swift
@@ -27,56 +27,7 @@
   // "If Using @EnvironmentObject" § toward the end.
 
 
-// Xcode 14.2 -> 14.5 (JULY)
-
-
-
-
-//                                      TO RUN IN TERMINAL, EG., FOR THE IMAGES BRANCH (connect iPhone via USB)
-//                                      TO RUN IN TERMINAL, EG., FOR THE IMAGES BRANCH
-//($ xcode-select --install )                    // A KMUST, FOR RUNNING CMD LINE build, XC-install and XC-launch
-//($ xcrun simctl list devices †† )
-//($ instruments -s devices )                   // confirm the device (inc correct UUID) is actually connected. Also see all avail devices. Non-op.
-//
-//              BUILD                   BUILD
-//$$$ xcodebuild -scheme "LCTO-14" -destination 'id=00008030-000608D90E9A402E' build       // id via XC/Window/Devices-and-Simulators ††
-//$$$ xcodebuild -scheme "LCTO-14" -destination 'id=00008030-000608D90E9A402E' build
-//
-//
-//              INSTALL                 INSTALL
-//
-// Below CMD does NOT DOWNLOAD APP ONTO iPHONE, ANYWHERE •••
-//$$$ xcodebuild -scheme "LCTO-14" -destination 'id=00008030-000608D90E9A402E' -configuration Release install           †††
-//$$$ xcodebuild -scheme "LCTO-14" -destination 'id=00008030-000608D90E9A402E' -configuration Release install
-//                          : )     WORKS 8-23-24)1326      : )  Terminal >>> " INSTALL SUCCEEDED "
-//                                                                       •••  ...bUT NO APP INSTALLED. ALSO NOT in iPhone/Settings/General/iPhone-Storage
-//
-//
-//              LAUNCH                  INSTALL
-
-/*              LAUNCH alternate >>>  (NON-OP)              NON-OP              NON-OP                  NON-OP                      NON-OP
-                    C-GPT-omni >>>If you want to LAUNCH the app automatically from the command line after installation, you can use the following command:
- xcrun xctrace run --target '00008030-000608D90E9A402E' --launch --app "com.tomEphraimPerez.LCTO-14"
-        Terminal >>> ' "run" is no recognized'
-        CGPT     >>> The correct way to launch an app on a physical device after installation typically involves interacting with the app directly on the device
-                     ((or using Xcode's interface)).
-               SO: After the app is installed using xcodebuild †††, unlock your iPhone and find the app icon on your home screen.
-                     Tap the icon to              *** launch the app manually ***.
-       NON-OP           NON-OP          NON-OP                                  NON-OP                      NON-OP                      NON-OP
- */
-
-
-
-//$ git add .
-//$ git commit -m "Added image feature"
-//$ git push origin Images
-
-
-
-/* RESULTS WHEN USING a UUID slightly different than 00008030-000608D90E9A402E
- --- xcodebuild: WARNING: Using the first of multiple matching destinations:
- { platform:iOS, arch:arm64, id:00008030-000608D90E9A402E, name:Thomas’s iPhone }
- */
+// Xcode 14.2 -> 14.5
 import SwiftUI                                              // Already present in CV.swift
 import Foundation
 

@@ -83,7 +83,7 @@ final class ViewModel: ObservableObject {
                     let comments = records.compactMap { record -> String? in
                         if let productName = record["productName"] as? String,
                            let comment = record["comment"] as? String,
-                           productName.lowercased().hasPrefix(searchTerm.lowercased()) {            // O. Spic and span v Spic and Span. :/
+                           productName.lowercased().hasPrefix(searchTerm.lowercased()) {
                             print("Comment found: \(comment)")
                             return comment
                         }
