@@ -1,4 +1,4 @@
-//
+// " IMAGES " <- after git add, git commit, git push in MAIN, the word "IMAGES" should stick HERE, and NOT in MAIN.
 // Copyright © 2024 bundle LCTO -14
 /*
  VM.swift
