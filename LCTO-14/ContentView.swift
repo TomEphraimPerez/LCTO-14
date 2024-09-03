@@ -1,148 +1,133 @@
 //
-//  ContentView.swift
-//  LCTO-14
-//
-//  Created by thomasperez on 4/17/24.
-//
+// Copyright © 2024 bundle LCTO -14
+/*
+ VM.swift
+ LCTO-14
+ See DT/LCTO-14.txt
+
+  Created by thomasperez on 4/17/24. | Swift 5. in toplevel LCTO-14 /LCTO-14.xcodeproj/Build_settings/Swift_compiler_Lang/..ver
+  For future customer updates/downloads fr AppStore, check their OS version vs my deployment target:
+
+ DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
+ Other Ap = pass to sim
+ Record_Type = ProductComment
+ Can't use exclamation points on comments
+
+*/
+
 
 import SwiftUI
 
 struct ContentView: View {
-    
-    //try;
     @EnvironmentObject var viewModel: ViewModel
-    //blw OK?
-    //@ObservedObject var viewModel: ViewModel  // assuming ViewModel conforms to ObservableObject
-    
-    var body: some View {   // Place cursor under 'body' to code-fold to see better
-         
-                                        // ZStack
-        ZStack{
+    private let maxCharacters = 88
+
+    var body: some View {
+        VStack(spacing: 20) {
+            StarView(rating: viewModel.averageRating)
+                .padding(.top, -15)                                 // O = -30! -15 is OK : )
             
-            VStack() {                  // VStack
-                                        // Ukr Blue
-                Color(red: 0.0, green: 0.6, blue: 0.9) // sans .ignoresSafeArea()
-       
-                
-                
-                                        // HSTACK
-                
-                HStack{
-                                        // Report button
+            ScrollView {
+                VStack(spacing: 20) {
+                    TextField("Search for the product here...", text: $viewModel.userInput3)
+                        .padding(.top, 0.5)
+                        .frame(width: UIScreen.main.bounds.width * 0.82)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                    
+                    Button("Search Product") {
+                        viewModel.fetchProductNames(searchTerm: viewModel.userInput3)
+                        viewModel.calculateAverageRating(for: viewModel.userInput3)
+                    }
+                    .padding()
+                    .foregroundColor(.white)
+                    .background(Color.blue)
+                    .cornerRadius(10)
+
+                    if !viewModel.searchMessage.isEmpty {
+                        Text(viewModel.searchMessage)
+                            .foregroundColor(.red)
+                            .padding()
+                            .bold()
+                    }
+                    
+                    if !viewModel.searchResults.isEmpty {
+                        VStack(alignment: .leading) {
+                            ForEach(viewModel.searchResults, id: \.self) { comment in
+                                Text(comment)
+                                    .padding(.vertical, 4)
+                                    .background(Color.gray.opacity(0.3))
+                                    .cornerRadius(2)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                        .padding()
+                        .background(Color.white)
+                        .cornerRadius(10)
+                        .shadow(radius: 10)
+                    } else {
+                        Text("No results found")
+                            .font(.headline)
+                    }
+                    
                     Spacer()
-                    
-                    /*
-                    Button {
-                        Report()
-                    } label: {
-                        Image("2")
-                    }
-                     
-                    */
-                    /*                                  // sim launched ok exc for bottons. Need to use MY buttons. 5-15-24)1338
-                    Button("Report") {
-                        let productName = "Sample Product"
-                        let comment = "Great product!"
-                        viewModel.postComment(productName: productName, comment: comment)
-                    }
-                    */
-                    Button {
-                        let productName = "Sample Product"
-                        let comment = "Great product!"
-                        viewModel.postComment(productName: productName, comment: comment)
-                    } label: {
-                        Image("2")
-                    }
-                    
-                    
-                                        // Search button
-                    Spacer()
-                    
-                    /*
-                    Button {
-                        Search()
-                    } label: {
-                        Image("3")
-                    }
-                    */                                  // sim launched ok exc for bottons. Need to use MY buttons. 5-15-24)1338
-                    /*
-                    Button("Search") {
-                        let productName = "Sample Product"
-                        viewModel.fetchComments(for: productName) { comments in
-                            // Update the UI to show fetched comments
-                            print(comments)
+
+                    VStack(spacing: 10) {
+                        TextField("Enter the product here...", text: $viewModel.userInput)
+                            .frame(width: UIScreen.main.bounds.width * 0.82)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+
+                        TextField("Enter star rating (0-5)", text: $viewModel.userInput4)
+                            .frame(width: UIScreen.main.bounds.width * 0.82)
+                            .keyboardType(.numberPad)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding()
+
+                        TextField("Enter your comment here...", text: $viewModel.userInput2)
+                            .frame(width: UIScreen.main.bounds.width * 0.92)
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .padding()
+                            .onChange(of: viewModel.userInput2) { newValue in
+                                if newValue.count > maxCharacters {
+                                    viewModel.userInput2 = String(newValue.prefix(maxCharacters))
+                                }
+                            }
+
+                        Text("\(viewModel.userInput2.count)/\(maxCharacters) characters")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        
+                        Button(action: {
+                            viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
+                        }) {
+                            Text("Post Comment")
+                                .padding()
+                                .background(Color.blue)
+                                .foregroundColor(.white)
+                                .cornerRadius(10)
                         }
                     }
-                    */
-                    Button {
-                        let productName = "Sample Product"
-                        viewModel.fetchComments(for: productName) { comments in
-                                                        // Update the UI to show fetched comments
-                            print(comments)
-                        }
-                    } label: {
-                        Image("3")
-                    }
-                    
-                    Spacer()
-                }//H
-                
-                    
-                
-                                        // Ukr Yellow
-                Color(red: 1.0, green: 1.0, blue: 0.0)//no.ignoresSafeArea()->no diff
-                
-                
-                
-                                        // Shelves display
-                Image("1")
-                    .resizable()
-                    .padding(7.0)
-                    .opacity(10.0)
-                //.aspectRatio(contentMode: .fit)   // Can not pad Lt/Rt sides.
-                    .cornerRadius(44.0)
-                
-                Text("Let's Check This OUT!")
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .foregroundColor(Color(red: 9.0, green: 0.0, blue: 0.5))
-                Spacer()
-                
-                                        // HStack
-                HStack{
-                    Image(systemName: "star.fill")
-                    Image(systemName: "star.fill")
-                    Image(systemName: "star.fill")
-                    Image(systemName: "star.fill")
-                    Image(systemName: "star.fill")
                 }
-                .foregroundColor(.orange)
-                
-                
-            }//VStack
-        }//ZStack
-    }//var body
-    
-    
-    /*
-    func Report(){
-        print("Console out should have string 'Report'")
-    }
-    
-    func Search(){
-        print("Console out should have string 'Search'")
-    }
-    */
-}//struct                                             // opt-sft </> fold/unfold
-
-
-
-
-/*      ?   ?   ?
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
+            }
+        }
+        .padding()
+        .background(Image("shelves").resizable().aspectRatio(contentMode: .fill).opacity(0.4).edgesIgnoringSafeArea(.all))
+        .onTapGesture {
+            hideKeyboard()
+        }
     }
 }
-*/
+
+extension View {
+    func hideKeyboard() {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView().environmentObject(ViewModel())
+    }
+}
+
+
 
