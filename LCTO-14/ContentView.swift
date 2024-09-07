@@ -15,7 +15,6 @@
 
 */
 
-
 import SwiftUI
 
 struct ContentView: View {
@@ -26,9 +25,10 @@ struct ContentView: View {
         VStack(spacing: 20) {
             StarView(rating: viewModel.averageRating)
                 .padding(.top, -15) // Adjust padding as needed
-            
+
             ScrollView {
                 VStack(spacing: 20) {
+                    // Search bar and search button
                     TextField("Search for the product here...", text: $viewModel.userInput3)
                         .padding(.top, 0.5)
                         .frame(width: UIScreen.main.bounds.width * 0.82)
@@ -43,13 +43,15 @@ struct ContentView: View {
                     .background(Color.blue)
                     .cornerRadius(10)
 
+                    // Error message if search fails
                     if !viewModel.searchMessage.isEmpty {
                         Text(viewModel.searchMessage)
                             .foregroundColor(.red)
                             .padding()
                             .bold()
                     }
-                    
+
+                    // Display search results
                     if !viewModel.searchResults.isEmpty {
                         VStack(alignment: .leading) {
                             ForEach(viewModel.searchResults, id: \.self) { comment in
@@ -68,9 +70,10 @@ struct ContentView: View {
                         Text("No results found")
                             .font(.headline)
                     }
-                    
+
                     Spacer()
 
+                    // Product and comment submission section
                     VStack(spacing: 10) {
                         TextField("Enter the product here...", text: $viewModel.userInput)
                             .frame(width: UIScreen.main.bounds.width * 0.82)
@@ -92,10 +95,12 @@ struct ContentView: View {
                                 }
                             }
 
+                        // Character counter display
                         Text("\(viewModel.userInput2.count)/\(maxCharacters) characters")
                             .font(.caption)
                             .foregroundColor(.gray)
-                        
+
+                        // Submit button
                         Button(action: {
                             viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
                         }) {
@@ -104,46 +109,6 @@ struct ContentView: View {
                                 .background(Color.blue)
                                 .foregroundColor(.white)
                                 .cornerRadius(10)
-                        }
-                        
-                        // Image buttons
-                        Button(action: {
-                            viewModel.pickImage(isBeforeImage: true)
-                        }) {
-                            Text("Pick Before Image")
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }
-                        
-                        Button(action: {
-                            viewModel.pickImage(isBeforeImage: false)
-                        }) {
-                            Text("Pick After Image")
-                                .padding()
-                                .background(Color.blue)
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                        }
-                        
-                        // Display selected images
-                        if let beforeImage = viewModel.beforeImage {
-                            Image(uiImage: beforeImage)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 200)
-                                .cornerRadius(10)
-                                .padding()
-                        }
-                        
-                        if let afterImage = viewModel.afterImage {
-                            Image(uiImage: afterImage)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(height: 200)
-                                .cornerRadius(10)
-                                .padding()
                         }
                     }
                 }
@@ -163,8 +128,15 @@ extension View {
     }
 }
 
+// StarView component with NaN check
 struct StarView: View {
-    var rating: Double
+    var rating: Double {
+        didSet {
+            if rating.isNaN || rating.isInfinite {
+                rating = 0 // Ensure the rating is valid
+            }
+        }
+    }
 
     var body: some View {
         HStack {
@@ -189,6 +161,8 @@ struct ContentView_Previews: PreviewProvider {
         ContentView().environmentObject(ViewModel())
     }
 }
+
+
 
 
 

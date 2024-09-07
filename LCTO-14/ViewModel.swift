@@ -15,7 +15,6 @@
 
 */
 
-
 import Foundation
 import CloudKit
 import SwiftUI
@@ -28,8 +27,6 @@ final class ViewModel: ObservableObject {
     @Published var searchResults: [String] = []
     @Published var searchMessage: String = ""
     @Published var averageRating: Double = 0.0
-    @Published var beforeImage: UIImage? = nil
-    @Published var afterImage: UIImage? = nil
 
     private var database: CKDatabase {
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase
@@ -40,13 +37,6 @@ final class ViewModel: ObservableObject {
         record["productName"] = productName
         record["comment"] = comment
         record["Stars"] = Int(rating) ?? 0
-
-        if let beforeImage = beforeImage, let afterImage = afterImage {
-            let beforeImageAsset = CKAsset(fileURL: saveImageToTemporaryURL(image: beforeImage))
-            let afterImageAsset = CKAsset(fileURL: saveImageToTemporaryURL(image: afterImage))
-            record["beforeImage"] = beforeImageAsset
-            record["afterImage"] = afterImageAsset
-        }
         
         database.save(record) { [weak self] _, error in
             DispatchQueue.main.async {
@@ -57,13 +47,112 @@ final class ViewModel: ObservableObject {
                     self?.userInput = ""
                     self?.userInput2 = ""
                     self?.userInput4 = ""
-                    self?.beforeImage = nil
-                    self?.afterImage = nil
                 }
             }
         }
     }
-    
+
+    func fetchProductNames(searchTerm: String) {
+        guard !searchTerm.isEmpty else {
+            DispatchQueue.main.async {
+                self.searchResults = []
+                self.searchMessage = "Please enter a search term."
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.searchMessage = ""
+            }
+            return
+        }
+
+        var allComments: [String] = []
+
+        func fetchAllRecords(with cursor: CKQueryOperation.Cursor? = nil) {
+            let operation: CKQueryOperation
+            
+            if let cursor = cursor {
+                operation = CKQueryOperation(cursor: cursor)
+            } else {
+                let predicate = NSPredicate(value: true)
+                let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+                operation = CKQueryOperation(query: query)
+            }
+
+            operation.recordFetchedBlock = { record in
+                if let productName = record["productName"] as? String,
+                   let comment = record["comment"] as? String,
+                   productName.lowercased().contains(searchTerm.lowercased()) {
+                    allComments.append(comment)
+                }
+            }
+
+            operation.queryCompletionBlock = { [weak self] cursor, error in
+                if let error = error {
+                    DispatchQueue.main.async {
+                        print("Error fetching records: \(error.localizedDescription)")
+                        self?.searchResults = []
+                    }
+                    return
+                }
+
+                if let cursor = cursor {
+                    fetchAllRecords(with: cursor)
+                } else {
+                    DispatchQueue.main.async {
+                        print("All records fetched: \(allComments.count) comments")
+                        self?.searchResults = allComments
+
+                        if self?.searchResults.isEmpty == true {
+                            self?.searchMessage = "No results found"
+                        } else {
+                            self?.searchMessage = ""
+                        }
+                    }
+                }
+            }
+
+            database.add(operation)
+        }
+
+        fetchAllRecords()
+    }
+
+    func calculateAverageRating(for productName: String) {
+        let predicate = NSPredicate(format: "productName == %@", productName)
+        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+
+        database.perform(query, inZoneWith: nil) { [weak self] records, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self?.searchMessage = "Failed to fetch stars: \(error.localizedDescription)"
+                    self?.averageRating = 0
+                } else {
+                    let stars = records?.compactMap { $0["Stars"] as? Int } ?? []
+                    if !stars.isEmpty {
+                        let total = stars.reduce(0, +)
+                        let average = Double(total) / Double(stars.count)
+                        self?.averageRating = average
+                    } else {
+                        self?.averageRating = 0
+                    }
+                }
+            }
+        }
+    }
+
+    private func handleError(_ error: Error) {
+        guard let ckError = error as? CKError else {
+            print("Error: \(error.localizedDescription)")
+            return
+        }
+
+        switch ckError.code {
+        case .networkUnavailable, .networkFailure:
+            print("Network error: Please check your internet connection.")
+        default:
+            print("Unhandled error: \(ckError.localizedDescription)")
+        }
+    }
+}
     
 /*                                                          ORIGINAL = OK, exc only FETCHES 1st 100 RECORDS ONLY!   Sun 8-25-24)1435
     func fetchProductNames(searchTerm: String) {
@@ -117,72 +206,7 @@ final class ViewModel: ObservableObject {
         }
     }
 */    //        <<<     END      END    ORIGINAL = OK, exc only FETCHES 1st 100 RECORDS ONLY!   Sun 8-25-24)1435     <<<
-    func fetchProductNames(searchTerm: String) {
-    guard !searchTerm.isEmpty else {
-        DispatchQueue.main.async {
-            self.searchResults = []
-            self.searchMessage = "Please enter a search term."
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.searchMessage = ""
-        }
-        return
-    }
 
-    var allComments: [String] = []
-
-    func fetchAllRecords(with cursor: CKQueryOperation.Cursor? = nil) {
-        let operation: CKQueryOperation
-        
-        if let cursor = cursor {
-            operation = CKQueryOperation(cursor: cursor)
-        } else {
-            let predicate = NSPredicate(value: true) // Fetch all records
-            let query = CKQuery(recordType: "ProductComment", predicate: predicate)
-            operation = CKQueryOperation(query: query)
-        }
-        
-        operation.recordFetchedBlock = { record in
-            if let productName = record["productName"] as? String,
-               let comment = record["comment"] as? String,
-               productName.lowercased().contains(searchTerm.lowercased()) {
-                allComments.append(comment)
-            }
-        }
-        
-        operation.queryCompletionBlock = { [weak self] cursor, error in
-            if let error = error {
-                DispatchQueue.main.async {
-                    print("Error fetching records: \(error.localizedDescription)")
-                    self?.searchResults = []
-                }
-                return
-            }
-            
-            if let cursor = cursor {
-                // Continue fetching the next batch
-                fetchAllRecords(with: cursor)
-            } else {
-                // No more records, update the UI on the main thread
-                DispatchQueue.main.async {
-                    print("All records fetched: \(allComments.count) comments")
-                    self?.searchResults = allComments
-                    
-                    if self?.searchResults.isEmpty == true {
-                        self?.searchMessage = "No results found"
-                    } else {
-                        self?.searchMessage = ""
-                    }
-                }
-            }
-        }
-        
-        database.add(operation)
-    }
-
-    // Start fetching records
-    fetchAllRecords()
-}
 
 
 
@@ -191,60 +215,7 @@ final class ViewModel: ObservableObject {
     
     
     
-    func calculateAverageRating(for productName: String) {
-        let predicate = NSPredicate(format: "productName == %@", productName)
-        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
 
-        database.perform(query, inZoneWith: nil) { [weak self] records, error in
-            DispatchQueue.main.async {
-                if let error = error {
-                    self?.searchMessage = "Failed to fetch stars: \(error.localizedDescription)"
-                    self?.averageRating = 0
-                } else {
-                    let stars = records?.compactMap { $0["Stars"] as? Int } ?? []
-                    if !stars.isEmpty {
-                        let total = stars.reduce(0, +)
-                        let average = Double(total) / Double(stars.count)
-                        self?.averageRating = average
-                    } else {
-                        self?.averageRating = 0
-                    }
-                }
-            }
-        }
-    }
-
-    func pickImage(isBeforeImage: Bool) {
-        let selectedImage = UIImage(systemName: "photo") // Placeholder for actual image selection logic.
-        
-        if isBeforeImage {
-            beforeImage = selectedImage
-        } else {
-            afterImage = selectedImage
-        }
-    }
-
-    private func saveImageToTemporaryURL(image: UIImage) -> URL {
-        let data = image.jpegData(compressionQuality: 0.8)!
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString + ".jpg")
-        try? data.write(to: url)
-        return url
-    }
-
-    private func handleError(_ error: Error) {
-        guard let ckError = error as? CKError else {
-            print("Error: \(error.localizedDescription)")
-            return
-        }
-
-        switch ckError.code {
-        case .networkUnavailable, .networkFailure:
-            print("\nNetwork error: Please check your internet connection.")
-        default:
-            print("\nUnhandled error: \(ckError.localizedDescription)")
-        }
-    }
-}
 
 
 
