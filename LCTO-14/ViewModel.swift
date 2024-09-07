@@ -72,7 +72,7 @@ final class ViewModel: ObservableObject {
             if let cursor = cursor {
                 operation = CKQueryOperation(cursor: cursor)
             } else {
-                let predicate = NSPredicate(value: true)
+                let predicate = NSPredicate(value: true)                                // O
                 let query = CKQuery(recordType: "ProductComment", predicate: predicate)
                 operation = CKQueryOperation(query: query)
             }
@@ -117,7 +117,7 @@ final class ViewModel: ObservableObject {
     }
 
     func calculateAverageRating(for productName: String) {
-        let predicate = NSPredicate(format: "productName == %@", productName)
+        let predicate = NSPredicate(value: true) // Fetch all records
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
 
         database.perform(query, inZoneWith: nil) { [weak self] records, error in
@@ -127,17 +127,27 @@ final class ViewModel: ObservableObject {
                     self?.averageRating = 0
                 } else {
                     let stars = records?.compactMap { $0["Stars"] as? Int } ?? []
-                    if !stars.isEmpty {
-                        let total = stars.reduce(0, +)
-                        let average = Double(total) / Double(stars.count)
-                        self?.averageRating = average
-                    } else {
+                    guard !stars.isEmpty else {
+                        // No stars found, set average rating to 0
                         self?.averageRating = 0
+                        return
                     }
+                    
+                    // Ensure that the count is not zero before performing division
+                    let total = stars.reduce(0, +)
+                    let count = stars.count
+                    guard count > 0 else {
+                        self?.averageRating = 0
+                        return
+                    }
+
+                    let average = Double(total) / Double(count)
+                    self?.averageRating = average
                 }
             }
         }
     }
+
 
     private func handleError(_ error: Error) {
         guard let ckError = error as? CKError else {
