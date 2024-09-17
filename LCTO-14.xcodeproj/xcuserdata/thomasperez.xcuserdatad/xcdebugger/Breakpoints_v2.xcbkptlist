@@ -18,10 +18,16 @@
             filePath = "LCTO-14/ViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< Updated upstream
 <<<<<<< HEAD
             startingLineNumber = "119"
             endingLineNumber = "119"
             landmarkName = "calculateAverageRating(for:)"
+=======
+            startingLineNumber = "117"
+            endingLineNumber = "117"
+            landmarkName = "fetchProductNames(searchTerm:)"
+>>>>>>> Stashed changes
             landmarkType = "7">
 =======
             startingLineNumber = "33"
@@ -45,22 +51,6 @@
             landmarkName = "database"
             landmarkType = "24">
 >>>>>>> my-temporary-branch
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "2C21BC4A-6AEE-4759-9A89-7A51F7B1A344"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LCTO-14/ViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
-            landmarkName = "fetchAllRecords(with:)"
-            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
