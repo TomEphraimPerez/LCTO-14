@@ -18,7 +18,6 @@
 		FF3333A02BE542D500FB0638 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
 			compilerSpec = com.apple.compilers.proxy.script;
-			dependencyFile = "$(DERIVED_FILES_DIR)/$(INPUT_FILE_PATH).d";
 			fileType = pattern.proxy;
 			inputFiles = (
 			);
