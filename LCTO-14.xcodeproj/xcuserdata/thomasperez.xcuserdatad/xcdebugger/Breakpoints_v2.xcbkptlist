@@ -7,17 +7,44 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+<<<<<<< HEAD
             uuid = "A1C2DBBA-2825-44DF-B5CB-46C363CE6EA4"
+=======
+            uuid = "10B00FA5-EED0-4676-9AE4-3143C0D9C5EE"
+>>>>>>> my-temporary-branch
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LCTO-14/ViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
+<<<<<<< HEAD
             startingLineNumber = "119"
             endingLineNumber = "119"
             landmarkName = "calculateAverageRating(for:)"
             landmarkType = "7">
+=======
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "database"
+            landmarkType = "24">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4FD36833-6EE1-4A00-9E36-7E6F3764CE8E"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "LCTO-14/ViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "34"
+            endingLineNumber = "34"
+            landmarkName = "database"
+            landmarkType = "24">
+>>>>>>> my-temporary-branch
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

@@ -29,6 +29,177 @@ final class ViewModel: ObservableObject {
     @Published var averageRating: Double = 0.0
 
     private var database: CKDatabase {
+//        return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase //Cnanged 9-16-24)1500
+        return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-142").publicCloudDatabase
+    }
+
+    func postComment(productName: String, comment: String, rating: String) {
+        let record = CKRecord(recordType: "ProductComment")
+        record["productName"] = productName
+        record["comment"] = comment
+        record["Stars"] = Int(rating) ?? 0
+        
+        database.save(record) { [weak self] _, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self?.handleError(error)
+                } else {
+                    print("Product, Comment, and # Stars posted OK!")
+                    self?.userInput = ""
+                    self?.userInput2 = ""
+                    self?.userInput4 = ""
+                }
+            }
+        }
+    }
+
+    func fetchProductNames(searchTerm: String) {
+        guard !searchTerm.isEmpty else {
+            self.searchResults = []
+            self.searchMessage = "Please enter a search term."
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.searchMessage = ""
+            }
+            return
+        }
+
+        let trimmedSearchTerm = searchTerm.trimmingCharacters(in: .whitespacesAndNewlines)
+        print("Performing query with search term: \(trimmedSearchTerm)")
+
+        let predicate = NSPredicate(value: true) // Fetch all records
+        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+
+        database.perform(query, inZoneWith: nil) { [weak self] records, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Search error: \(error.localizedDescription)")
+                    self?.searchResults = []
+                } else {
+                    guard let records = records else {
+                        print("No records fetched.")
+                        self?.searchResults = []
+                        return
+                    }
+                    print("Records fetched: \(records.count)")
+
+                    let comments = records.compactMap { record -> String? in
+                        if let productName = record["productName"] as? String,
+                           let comment = record["comment"] as? String {
+                            print("Fetched productName: '\(productName)'")
+                            if productName.lowercased().hasPrefix(trimmedSearchTerm.lowercased()) {
+                                print("Comment found for productName: \(comment)")
+                                return comment
+                            }
+                        }
+                        return nil
+                    }
+
+                    print("Comments found: \(comments)")
+                    self?.searchResults = comments
+                    print("Search complete. Found: \(self?.searchResults ?? [])")
+
+                    if self?.searchResults.isEmpty == true {
+                        self?.searchMessage = "No results found"
+                    } else {
+                        self?.searchMessage = ""
+                    }
+                }
+            }
+        }
+    }
+
+    func calculateAverageRating(for productName: String) {
+        let predicate = NSPredicate(format: "productName == %@", productName)
+        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+
+        database.perform(query, inZoneWith: nil) { [weak self] records, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self?.searchMessage = "Failed to fetch stars: \(error.localizedDescription)"
+                    self?.averageRating = 0
+                } else {
+                    let stars = records?.compactMap { $0["Stars"] as? Int } ?? []
+                    if !stars.isEmpty {
+                        let total = stars.reduce(0, +)
+                        let average = Double(total) / Double(stars.count)
+                        self?.averageRating = average
+                    } else {
+                        self?.averageRating = 0
+                    }
+                }
+            }
+        }
+    }
+
+    private func handleError(_ error: Error) {
+        guard let ckError = error as? CKError else {
+            print("Error: \(error.localizedDescription)")
+            return
+        }
+
+        switch ckError.code {
+        case .networkUnavailable, .networkFailure:
+            print("\nNetwork error: Please check your internet connection.")
+        default:
+            print("\nUnhandled error: \(ckError.localizedDescription)")
+        }
+    }
+}
+
+
+
+
+
+
+
+//?
+struct StarView: View {
+    var rating: Double
+
+    var body: some View {
+        HStack {
+            ForEach(0..<5) { index in
+                Image(systemName: starType(index: index))
+                    .foregroundColor(index < Int(rating) ? .red : .gray)     // O = .yellow
+            }
+        }
+    }
+    
+    private func starType(index: Int) -> String {
+        if Double(index) < rating {
+            return index + 1 <= Int(rating) ? "star.fill" : "star.leadinghalf.fill"
+        } else {
+            return "star"
+        }
+    }
+}
+
+struct StarView_Previews: PreviewProvider {
+    static var previews: some View {
+        StarView(rating: 3.5)
+    }
+}
+
+
+
+
+
+
+/*                                                         O Fri 9-13-24)2151
+import Foundation
+import CloudKit
+import SwiftUI
+
+final class ViewModel: ObservableObject {
+    @Published var userInput: String = ""
+    @Published var userInput2: String = ""
+    @Published var userInput3: String = ""
+    @Published var userInput4: String = ""
+    @Published var searchResults: [String] = []
+    @Published var searchMessage: String = ""
+    @Published var averageRating: Double = 0.0
+
+    private var database: CKDatabase {
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase
     }
 
@@ -51,6 +222,7 @@ final class ViewModel: ObservableObject {
             }
         }
     }
+<<<<<<< HEAD
 
     func fetchProductNames(searchTerm: String) {
         guard !searchTerm.isEmpty else {
@@ -165,6 +337,31 @@ final class ViewModel: ObservableObject {
 }
     
 /*                                                          ORIGINAL = OK, exc only FETCHES 1st 100 RECORDS ONLY!   Sun 8-25-24)1435
+=======
+ 
+
+    private func processFetchedMatchResults(_ matchResults: [(CKRecord.ID, Result<CKRecord, Error>)], searchTerm: String) {
+        let comments = matchResults.compactMap { recordID, result -> String? in
+            switch result {
+            case .success(let record):
+                if let productName = record["productName"] as? String,
+                   let comment = record["comment"] as? String,
+                   productName.lowercased().hasPrefix(searchTerm.lowercased()) {
+                    return comment
+                }
+            case .failure:
+                return nil
+            }
+            return nil
+        }
+        
+        print("Comments found: \(comments)")
+        self.searchResults = comments
+        self.searchMessage = comments.isEmpty ? "No results found" : ""
+    }
+    
+    //                                                          O 9-13-24)2010
+>>>>>>> my-temporary-branch
     func fetchProductNames(searchTerm: String) {
         guard !searchTerm.isEmpty else {
             self.searchResults = []
@@ -218,15 +415,62 @@ final class ViewModel: ObservableObject {
 */    //        <<<     END      END    ORIGINAL = OK, exc only FETCHES 1st 100 RECORDS ONLY!   Sun 8-25-24)1435     <<<
 
 
+<<<<<<< HEAD
+=======
+//                                               O 9-13-24)2032
+    func calculateAverageRating(for productName: String) {
+        let predicate = NSPredicate(format: "productName == %@", productName)
+        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+>>>>>>> my-temporary-branch
 
 
+<<<<<<< HEAD
 
+=======
+    
+    private func handleError(_ error: Error) {
+        guard let ckError = error as? CKError else {
+            print("Error: \(error.localizedDescription)")
+            return
+        }
+
+        switch ckError.code {
+        case .networkUnavailable, .networkFailure:
+            print("\nNetwork error: Please check your internet connection.")
+        default:
+            print("\nUnhandled error: \(ckError.localizedDescription)")
+        }
+    }
+}
+
+
+struct StarView: View {
+    var rating: Double
+
+    var body: some View {
+        HStack {
+            ForEach(0..<5) { index in
+                Image(systemName: starType(index: index))
+                    .foregroundColor(index < Int(rating) ? .red : .gray)     // O = .yellow
+            }
+        }
+    }
+>>>>>>> my-temporary-branch
     
     
     
     
 
+<<<<<<< HEAD
 
+=======
+struct StarView_Previews: PreviewProvider {
+    static var previews: some View {
+        StarView(rating: 3.5)
+    }
+}
+*/
+>>>>>>> my-temporary-branch
 
 
 /**
