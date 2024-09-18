@@ -1,56 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bucket
-   uuid = "C3211922-BF22-43E9-9A81-9DE738DE6A3E"
+   uuid = "954E2749-5EF7-4B23-BAF0-59394C3D2C24"
    type = "1"
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-<<<<<<< HEAD
-            uuid = "A1C2DBBA-2825-44DF-B5CB-46C363CE6EA4"
-=======
-            uuid = "10B00FA5-EED0-4676-9AE4-3143C0D9C5EE"
->>>>>>> my-temporary-branch
+            uuid = "1464AD69-3B14-4247-B911-5660FDB6E0F6"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "LCTO-14/ViewModel.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-<<<<<<< Updated upstream
-<<<<<<< HEAD
-            startingLineNumber = "119"
-            endingLineNumber = "119"
-            landmarkName = "calculateAverageRating(for:)"
-=======
-            startingLineNumber = "117"
-            endingLineNumber = "117"
-            landmarkName = "fetchProductNames(searchTerm:)"
->>>>>>> Stashed changes
-            landmarkType = "7">
-=======
-            startingLineNumber = "33"
-            endingLineNumber = "33"
-            landmarkName = "database"
-            landmarkType = "24">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            uuid = "4FD36833-6EE1-4A00-9E36-7E6F3764CE8E"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "LCTO-14/ViewModel.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "34"
-            endingLineNumber = "34"
-            landmarkName = "database"
-            landmarkType = "24">
->>>>>>> my-temporary-branch
+            startingLineNumber = "147"
+            endingLineNumber = "147"
+            landmarkName = "ViewModel"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

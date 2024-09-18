@@ -53,6 +53,97 @@ final class ViewModel: ObservableObject {
         }
     }
 
+ 
+    
+
+    
+// HELP ME WITH CASE-SENSITIVIty CGPT      HELP ME WITH CASE-SENSITIVIty CGPT          HELP ME WITH CASE-SENSITIVIty CGPT
+    func fetchProductNames(searchTerm: String) {
+        guard !searchTerm.isEmpty else {
+            self.searchResults = []
+            self.searchMessage = "Please enter a search term."
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                self.searchMessage = ""
+            }
+            return
+        }
+
+        let predicate = NSPredicate(value: true) // Fetch all records
+        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+        print("Performing query with search term: \(searchTerm)")
+
+        database.perform(query, inZoneWith: nil) { [weak self] records, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Search error: \(error.localizedDescription)")
+                    self?.searchResults = []
+                } else {
+                    guard let records = records else {
+                        print("No records fetched.")
+                        self?.searchResults = []
+                        return
+                    }
+                    print("Records fetched: \(records.count)")
+                    
+                    // Perform case-insensitive filtering on the client side
+                    let comments = records.compactMap { record -> String? in
+                        if let productName = record["productName"] as? String,
+                           let comment = record["comment"] as? String,
+                           productName.range(of: searchTerm, options: .caseInsensitive) != nil {
+                            return comment
+                        }
+                        return nil
+                    }
+                    
+                    print("Comments found: \(comments)")
+                    self?.searchResults = comments
+                    print("Search complete. Found: \(self?.searchResults ?? [])")
+                    
+                    if self?.searchResults.isEmpty == true {
+                        self?.searchMessage = "No results found"
+                    } else {
+                        self?.searchMessage = ""
+                    }
+                }
+            }
+        }
+    }
+
+    func calculateAverageRating(for productName: String) {
+        let predicate = NSPredicate(value: true) // Fetch all records
+        let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+
+        database.perform(query, inZoneWith: nil) { [weak self] records, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self?.searchMessage = "Failed to fetch stars: \(error.localizedDescription)"
+                    self?.averageRating = 0
+                } else {
+                    // Filter records locally for case-insensitive match
+                    let stars = records?.compactMap { record -> Int? in
+                        if let name = record["productName"] as? String,
+                           name.range(of: productName, options: .caseInsensitive) != nil {
+                            return record["Stars"] as? Int
+                        }
+                        return nil
+                    } ?? []
+
+                    if !stars.isEmpty {
+                        let total = stars.reduce(0, +)
+                        let average = Double(total) / Double(stars.count)
+                        self?.averageRating = average
+                    } else {
+                        self?.averageRating = 0
+                    }
+                }
+            }
+        }
+    }
+//  HELP ME END CASE-SENSITIVIty CGPT      HELP ME END CASE-SENSITIVIty CGPT          HELP ME END CASE-SENSITIVIty CGPT
+ 
+ 
+    // O TUE 9-17-24)1410 Langcha cake-1        O TUE 9-17-24)1410 Langcha cake-1           O TUE 9-17-24)1410 Langcha cake-1
+    /*
     func fetchProductNames(searchTerm: String) {
         guard !searchTerm.isEmpty else {
             self.searchResults = []
@@ -105,9 +196,12 @@ final class ViewModel: ObservableObject {
                     }
                 }
             }
-        }
-    }
+        } // database.perform
+    } // func fetchProductNames
 
+    
+    
+    
     func calculateAverageRating(for productName: String) {
         let predicate = NSPredicate(format: "productName == %@", productName)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
@@ -130,7 +224,9 @@ final class ViewModel: ObservableObject {
             }
         }
     }
-
+*/
+    
+    
     private func handleError(_ error: Error) {
         guard let ckError = error as? CKError else {
             print("Error: \(error.localizedDescription)")
@@ -147,12 +243,6 @@ final class ViewModel: ObservableObject {
 }
 
 
-
-
-
-
-
-//?
 struct StarView: View {
     var rating: Double
 
@@ -222,7 +312,7 @@ final class ViewModel: ObservableObject {
             }
         }
     }
-<<<<<<< HEAD
+
 
     func fetchProductNames(searchTerm: String) {
         guard !searchTerm.isEmpty else {
@@ -281,13 +371,12 @@ final class ViewModel: ObservableObject {
                     }
                 }
             }
-
             database.add(operation)
         }
-
         fetchAllRecords()
     }
 
+ 
     func calculateAverageRating(for productName: String) {
         let predicate = NSPredicate(value: true) // Fetch all records
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
@@ -335,10 +424,10 @@ final class ViewModel: ObservableObject {
         }
     }
 }
-    
-/*                                                          ORIGINAL = OK, exc only FETCHES 1st 100 RECORDS ONLY!   Sun 8-25-24)1435
-=======
+*/
  
+ 
+/*                                                          ORIGINAL = OK, exc only FETCHES 1st 100 RECORDS ONLY!   Sun 8-25-24)1435
 
     private func processFetchedMatchResults(_ matchResults: [(CKRecord.ID, Result<CKRecord, Error>)], searchTerm: String) {
         let comments = matchResults.compactMap { recordID, result -> String? in
@@ -360,8 +449,9 @@ final class ViewModel: ObservableObject {
         self.searchMessage = comments.isEmpty ? "No results found" : ""
     }
     
-    //                                                          O 9-13-24)2010
->>>>>>> my-temporary-branch
+ 
+    //                                                          O       9-13-24)2010
+
     func fetchProductNames(searchTerm: String) {
         guard !searchTerm.isEmpty else {
             self.searchResults = []
@@ -372,7 +462,7 @@ final class ViewModel: ObservableObject {
             return
         }
 
-        let predicate = NSPredicate(value: true) // Fetch all records
+        let predicate = NSPredicate(value: true)                                // Fetch all records
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
         print("Performing query with search term: \(searchTerm)")
 
@@ -414,19 +504,18 @@ final class ViewModel: ObservableObject {
     }
 */    //        <<<     END      END    ORIGINAL = OK, exc only FETCHES 1st 100 RECORDS ONLY!   Sun 8-25-24)1435     <<<
 
+ 
+ 
+ 
 
-<<<<<<< HEAD
-=======
-//                                               O 9-13-24)2032
+
+/*
+//                                                   O      9-13-24)2032 as well
     func calculateAverageRating(for productName: String) {
         let predicate = NSPredicate(format: "productName == %@", productName)
         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
->>>>>>> my-temporary-branch
 
 
-<<<<<<< HEAD
-
-=======
     
     private func handleError(_ error: Error) {
         guard let ckError = error as? CKError else {
@@ -455,25 +544,18 @@ struct StarView: View {
             }
         }
     }
->>>>>>> my-temporary-branch
-    
-    
-    
     
 
-<<<<<<< HEAD
-
-=======
 struct StarView_Previews: PreviewProvider {
     static var previews: some View {
         StarView(rating: 3.5)
     }
 }
 */
->>>>>>> my-temporary-branch
 
 
-/**
+
+/*
  Format specifiers:
  %d - int Value
  %f - float value

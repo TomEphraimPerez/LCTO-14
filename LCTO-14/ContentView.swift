@@ -128,6 +128,7 @@ extension View {
     }
 }
 
+/*
 // StarView component with NaN check
 struct StarView: View {
     var rating: Double {
@@ -161,7 +162,7 @@ struct ContentView_Previews: PreviewProvider {
         ContentView().environmentObject(ViewModel())
     }
 }
-
+*/
 
 
 
