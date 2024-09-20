@@ -98,7 +98,8 @@ struct ContentView: View {
                         // Character counter display
                         Text("\(viewModel.userInput2.count)/\(maxCharacters) characters")
                             .font(.caption)
-                            .foregroundColor(.gray)
+                            .foregroundColor(.black)
+                            .bold()
 
                         // Submit button
                         Button(action: {

@@ -188,15 +188,17 @@ struct StarView: View {
         HStack {
             ForEach(0..<5) { index in
                 Image(systemName: starType(index: index))
-                    .foregroundColor(index < Int(rating) ? .red : .gray)     // O = .yellow
+                    .foregroundColor(index < Int(ceil(rating)) ? .red : .gray) // Adjust color for full and half stars
             }
         }
     }
     
     private func starType(index: Int) -> String {
-        if Double(index) < rating {
-            return index + 1 <= Int(rating) ? "star.fill" : "star.leadinghalf.fill"
-        } else {
+        if Double(index) < rating - 0.5 { // Full stars
+            return "star.fill"
+        } else if Double(index) < rating && rating - Double(index) >= 0.5 { // Half star case
+            return "star.leadinghalf.fill"
+        } else { // Empty stars
             return "star"
         }
     }
@@ -207,6 +209,7 @@ struct StarView_Previews: PreviewProvider {
         StarView(rating: 3.5)
     }
 }
+
 
 
 
