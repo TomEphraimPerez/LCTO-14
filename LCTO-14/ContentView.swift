@@ -29,7 +29,7 @@ struct ContentView: View {
             ScrollView {
                 VStack(spacing: 20) {
                     // Search bar and search button
-                    TextField("Search for the product here...", text: $viewModel.userInput3)
+                    TextField("Search, then press Search-Product", text: $viewModel.userInput3)
                         .padding(.top, 0.5)
                         .frame(width: UIScreen.main.bounds.width * 0.82)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -75,17 +75,17 @@ struct ContentView: View {
 
                     // Product and comment submission section
                     VStack(spacing: 10) {
-                        TextField("Enter the product here...", text: $viewModel.userInput)
+                        TextField("Post product, stars, comments.", text: $viewModel.userInput)
                             .frame(width: UIScreen.main.bounds.width * 0.82)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
 
-                        TextField("Enter star rating (0-5)", text: $viewModel.userInput4)
+                        TextField("Enter number of stars (0-5)", text: $viewModel.userInput4)
                             .frame(width: UIScreen.main.bounds.width * 0.82)
                             .keyboardType(.numberPad)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
 
-                        TextField("Enter your comment here...", text: $viewModel.userInput2)
+                        TextField("Comment here. Tap any bottle to POST", text: $viewModel.userInput2)
                             .frame(width: UIScreen.main.bounds.width * 0.92)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
@@ -105,7 +105,7 @@ struct ContentView: View {
                         Button(action: {
                             viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
                         }) {
-                            Text("Post Comment")
+                            Text("POST comment")
                                 .padding()
                                 .background(Color.blue)
                                 .foregroundColor(.white)

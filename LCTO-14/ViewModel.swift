@@ -35,8 +35,16 @@ final class ViewModel: ObservableObject {
 
     
     func postComment(productName: String, comment: String, rating: String) {
+        // Regular expression to match all types of apostrophes, periods, and hyphens
+        let sanitizedProductName = productName.replacingOccurrences(
+            of: "[\\u0027\\u2019\\.\\-]", // Matches straight and curly apostrophes, periods, and hyphens
+            with: "",
+            options: .regularExpression,
+            range: nil
+        )
+        
         let record = CKRecord(recordType: "ProductComment")
-        record["productName"] = productName
+        record["productName"] = sanitizedProductName
         record["comment"] = comment
         record["Stars"] = Int(rating) ?? 0
         
@@ -53,7 +61,7 @@ final class ViewModel: ObservableObject {
             }
         }
     }
-
+// comments
  
     
 // HELP ME END APOSTROPHIES CGPT       HELP ME END APOSTROPHIES CGPT                         HELP ME END APOSTROPHIES CGPT
@@ -125,8 +133,11 @@ final class ViewModel: ObservableObject {
         // Start fetching records
         fetchAllRecords()
     }
-    // func fetch
+    //          --------------->             func fetch                  xfunc fetch                         func fetch
 
+    
+    
+    
     
     func calculateAverageRating(for productName: String) {
         guard !productName.isEmpty else {
