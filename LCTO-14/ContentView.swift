@@ -89,6 +89,7 @@ struct ContentView: View {
                             .frame(width: UIScreen.main.bounds.width * 0.92)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
+                            .bold()
                             .onChange(of: viewModel.userInput2) { newValue in
                                 if newValue.count > maxCharacters {
                                     viewModel.userInput2 = String(newValue.prefix(maxCharacters))

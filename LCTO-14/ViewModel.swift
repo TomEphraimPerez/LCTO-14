@@ -65,7 +65,7 @@ final class ViewModel: ObservableObject {
  
     
 // HELP ME END APOSTROPHIES CGPT       HELP ME END APOSTROPHIES CGPT                         HELP ME END APOSTROPHIES CGPT
-    func fetchProductNames(searchTerm: String) {
+    func fetchProductNames(searchTerm: String) {                        // : ) KEEP THIS SINCE 165 RECORDS WERE INDEED FETCHED : )
         guard !searchTerm.isEmpty else {
             self.searchResults = []
             self.searchMessage = "Please enter a search term."
@@ -92,12 +92,18 @@ final class ViewModel: ObservableObject {
 
             operation.recordFetchedBlock = { record in
                 if let productName = record["productName"] as? String,
-                   let comment = record["comment"] as? String {
+                   let comment = record["comment"] as? String,
+                   let stars = record["Stars"] as? Int {
+                    // Log each product fetched with its stars
+                    print("Fetched record with name: \(productName), Stars: \(stars)")
+                    
                     // Remove apostrophes from product name for comparison
                     let normalizedProductName = productName.replacingOccurrences(of: "'", with: "")
                     if normalizedProductName.range(of: normalizedSearchTerm, options: .caseInsensitive) != nil {
                         allComments.append(comment)
                     }
+                } else {
+                    print("Fetched record without Stars or productName")
                 }
             }
 
@@ -133,7 +139,8 @@ final class ViewModel: ObservableObject {
         // Start fetching records
         fetchAllRecords()
     }
-    //          --------------->             func fetch                  xfunc fetch                         func fetch
+
+    //          --------------->        // : ) KEEP THIS SINCE 165 RECORDS WERE INDEED FETCHED : )
 
     
     
@@ -179,7 +186,8 @@ final class ViewModel: ObservableObject {
                 }
             }
         }
-    } // func calc
+    } 
+    // func calc
 
 //  HELP ME END APOSTROPHIES CGPT       HELP ME END APOSTROPHIES CGPT                        HELP ME END APOSTROPHIES CGPT
  
