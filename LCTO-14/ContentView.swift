@@ -85,7 +85,7 @@ struct ContentView: View {
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
 
-                        TextField("Comment here. Tap any bottle to POST", text: $viewModel.userInput2)
+                        TextField("Comment here. Tap ANY bottle to POST", text: $viewModel.userInput2)
                             .frame(width: UIScreen.main.bounds.width * 0.92)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
