@@ -27,6 +27,7 @@ final class ViewModel: ObservableObject {
     @Published var searchResults: [String] = []
     @Published var searchMessage: String = ""
     @Published var averageRating: Double = 0.0
+    
 
     private var database: CKDatabase {
 //        return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase //Cnanged 9-16-24)1500
@@ -63,6 +64,37 @@ final class ViewModel: ObservableObject {
     }
 // comments
  
+    
+    
+    
+    
+    
+    
+    // Validate that a string contains only allowed ASCII characters (excluding apostrophes, periods, and hyphens)
+    func isValidASCIIWithoutSpecialChars(_ input: String) -> Bool {
+        // Define the allowed ASCII characters excluding apostrophes, periods, and hyphens
+        let allowedCharacters = CharacterSet(charactersIn: "\u{0020}"..."\u{007E}")
+            .subtracting(CharacterSet(charactersIn: "'-."))
+        
+        // Return true if the input string contains only allowed characters
+        return input.rangeOfCharacter(from: allowedCharacters.inverted) == nil
+    }
+
+    // Remove any character that is not in the allowed ASCII set
+    func sanitizeToValidASCII(_ input: String) -> String {
+        // Define the allowed ASCII characters excluding apostrophes, periods, and hyphens
+        let allowedCharacters = CharacterSet(charactersIn: "\u{0020}"..."\u{007E}")
+            .subtracting(CharacterSet(charactersIn: "'-."))
+        
+        // Filter out any character not in the allowed ASCII set
+        return input.unicodeScalars.filter { allowedCharacters.contains($0) }.map(String.init).joined()
+    }
+
+    
+    
+    
+    
+    
     
 // HELP ME END APOSTROPHES CGPT       HELP ME END APOSTROPHES CGPT                         HELP ME END APOSTROPHES CGPT
     func fetchProductNames(searchTerm: String) {
