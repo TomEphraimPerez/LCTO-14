@@ -12,6 +12,8 @@
 		FF88E9132BD0919E008C24D1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF88E9122BD0919E008C24D1 /* ContentView.swift */; };
 		FF88E9152BD0919F008C24D1 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF88E9142BD0919F008C24D1 /* Assets.xcassets */; };
 		FF88E9182BD0919F008C24D1 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FF88E9172BD0919F008C24D1 /* Preview Assets.xcassets */; };
+		FFC31A142CC1918000C73E4F /* ViewModelImages.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC31A132CC1918000C73E4F /* ViewModelImages.swift */; };
+		FFC31A162CC191B000C73E4F /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC31A152CC191B000C73E4F /* ImagePicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -38,6 +40,8 @@
 		FF88E9172BD0919F008C24D1 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		FF88E9192BD0919F008C24D1 /* LCTO_14.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = LCTO_14.entitlements; sourceTree = "<group>"; };
 		FF9A8B272C3C6C29004EB764 /* LCTO-14Debug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "LCTO-14Debug.entitlements"; sourceTree = "<group>"; };
+		FFC31A132CC1918000C73E4F /* ViewModelImages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelImages.swift; sourceTree = "<group>"; };
+		FFC31A152CC191B000C73E4F /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +82,8 @@
 				FF88E9192BD0919F008C24D1 /* LCTO_14.entitlements */,
 				FF84DC452C472948009FEF96 /* Info.plist */,
 				FF88E9162BD0919F008C24D1 /* Preview Content */,
+				FFC31A132CC1918000C73E4F /* ViewModelImages.swift */,
+				FFC31A152CC191B000C73E4F /* ImagePicker.swift */,
 			);
 			path = "LCTO-14";
 			sourceTree = "<group>";
@@ -163,6 +169,8 @@
 			files = (
 				FF88E9132BD0919E008C24D1 /* ContentView.swift in Sources */,
 				FF3333A22BF2C59900FB0638 /* ViewModel.swift in Sources */,
+				FFC31A162CC191B000C73E4F /* ImagePicker.swift in Sources */,
+				FFC31A142CC1918000C73E4F /* ViewModelImages.swift in Sources */,
 				FF88E9112BD0919E008C24D1 /* LCTO_14App.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

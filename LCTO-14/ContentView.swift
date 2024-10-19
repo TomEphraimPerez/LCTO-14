@@ -1,30 +1,23 @@
-//
-// Copyright © 2024 bundle LCTO -14
-/*
- CV.swift
- LCTO-14
- See DT/LCTO-14.txt
-
-  Created by thomasperez on 4/17/24. | Swift 5. in toplevel LCTO-14 /LCTO-14.xcodeproj/Build_settings/Swift_compiler_Lang/..ver
-  For future customer updates/downloads fr AppStore, check their OS version vs my deployment target:
-
- DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
- Other Ap = pass to sim
- Record_Type = ProductComment
- Can't use exclamation points on comments
-
-*/
-
 import SwiftUI
 
 struct ContentView: View {
     @EnvironmentObject var viewModel: ViewModel
+    @StateObject private var viewModelImages = ViewModelImages()
+
     private let maxCharacters = 88
+    @State private var showImagePicker = false
+    @State private var selectedImageType: ImageType?
+    @State private var showErrorMessage = false
+
+    enum ImageType {
+        case before, after
+    }
 
     var body: some View {
         VStack(spacing: 20) {
+            // Display star ratings
             StarView(rating: viewModel.averageRating)
-                .padding(.top, -15) // Adjust padding as needed
+                .padding(.top, -15)
 
             ScrollView {
                 VStack(spacing: 20) {
@@ -32,26 +25,50 @@ struct ContentView: View {
                     TextField("Search, then press Search-Product", text: $viewModel.userInput3)
                         .padding(.top, 0.5)
                         .frame(width: UIScreen.main.bounds.width * 0.82)
+                        .bold()
                         .textFieldStyle(RoundedBorderTextFieldStyle())
-                    
+                        .onChange(of: viewModel.userInput3) { newValue in
+                            // If the input is empty, reset the search results and message
+                            if newValue.isEmpty {
+                                viewModel.searchMessage = ""
+                                viewModel.hasSearched = false
+                                viewModel.searchResults = []
+                            }
+                        }
+
+
+
                     Button("Search Product") {
-                        viewModel.fetchProductNames(searchTerm: viewModel.userInput3)
-                        viewModel.calculateAverageRating(for: viewModel.userInput3)
+                        if viewModel.userInput3.isEmpty {
+                            viewModel.searchMessage = "Please enter a product name to search."
+                            showErrorMessage = true
+                            // Hide the error message after 2 seconds
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                                withAnimation {
+                                    showErrorMessage = false
+                                }
+                            }
+                        } else {
+                            viewModel.fetchProductNames(searchTerm: viewModel.userInput3)
+                            viewModel.calculateAverageRating(for: viewModel.userInput3)
+                        }
                     }
                     .padding()
                     .foregroundColor(.white)
                     .background(Color.blue)
                     .cornerRadius(10)
 
-                    // Error message if search fails
-                    if !viewModel.searchMessage.isEmpty {
+                    // Error message display with animation
+                    if showErrorMessage {
                         Text(viewModel.searchMessage)
                             .foregroundColor(.red)
                             .padding()
                             .bold()
+                            .transition(.opacity)
+                            .animation(.easeInOut(duration: 0.5), value: showErrorMessage)
                     }
 
-                    // Display search results
+                    // Display search results or the "No results found" message.
                     if !viewModel.searchResults.isEmpty {
                         VStack(alignment: .leading) {
                             ForEach(viewModel.searchResults, id: \.self) { comment in
@@ -66,26 +83,32 @@ struct ContentView: View {
                         .background(Color.white)
                         .cornerRadius(10)
                         .shadow(radius: 10)
-                    } else {
+                    } else if viewModel.hasSearched && viewModel.searchResults.isEmpty {
                         Text("No results found")
                             .font(.headline)
+                            .foregroundColor(.black) // Using black as requested
+                            .padding()
                     }
+
+
 
                     Spacer()
 
                     // Product and comment submission section
                     VStack(spacing: 10) {
-                        TextField("Post product, stars, comments.", text: $viewModel.userInput)
+                        TextField("Post product name here", text: $viewModel.userInput)
                             .frame(width: UIScreen.main.bounds.width * 0.82)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
-
-                        TextField("Enter number of stars (0-5)", text: $viewModel.userInput4)
+                            .bold()
+                        
+                        TextField("Enter Stars 0-5. Tap a bottle to shed KB", text: $viewModel.userInput4)
                             .frame(width: UIScreen.main.bounds.width * 0.82)
                             .keyboardType(.numberPad)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
-
-                        TextField("Comment here. Tap ANY bottle to POST", text: $viewModel.userInput2)
+                            .bold()
+                        
+                        TextField("Comment here. Tap a bottle to shed KB", text: $viewModel.userInput2)
                             .frame(width: UIScreen.main.bounds.width * 0.92)
                             .textFieldStyle(RoundedBorderTextFieldStyle())
                             .padding()
@@ -102,9 +125,13 @@ struct ContentView: View {
                             .foregroundColor(.black)
                             .bold()
 
-                        // Submit button
+                        // Submit button for posting a comment
                         Button(action: {
-                            viewModel.postComment(productName: viewModel.userInput, comment: viewModel.userInput2, rating: viewModel.userInput4)
+                            viewModel.postComment(
+                                productName: viewModel.userInput,
+                                comment: viewModel.userInput2,
+                                rating: viewModel.userInput4
+                            )
                         }) {
                             Text("POST comment")
                                 .padding()
@@ -115,11 +142,48 @@ struct ContentView: View {
                     }
                 }
             }
+
+            // Spacer to keep layout tidy
+            Spacer()
+
+            // Add the Before/After image buttons on the landing screen
+            HStack {
+                Button(action: {
+                    selectedImageType = .before
+                    showImagePicker = true
+                }) {
+                    Image(systemName: "arrowshape.turn.up.left.circle")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.blue)
+                    Text("Before")
+                }
+
+                Spacer()
+
+                Button(action: {
+                    selectedImageType = .after
+                    showImagePicker = true
+                }) {
+                    Image(systemName: "arrowshape.turn.up.right.circle")
+                        .resizable()
+                        .frame(width: 50, height: 50)
+                        .foregroundColor(.blue)
+                    Text("After")
+                }
+            }
+            .padding()
         }
         .padding()
         .background(Image("shelves").resizable().aspectRatio(contentMode: .fill).opacity(0.4).edgesIgnoringSafeArea(.all))
         .onTapGesture {
             hideKeyboard()
+        }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePicker(
+                selectedImage: selectedImageType == .before ? $viewModelImages.beforeImage : $viewModelImages.afterImage,
+                isPresented: $showImagePicker
+            )
         }
     }
 }
@@ -130,42 +194,120 @@ extension View {
     }
 }
 
-/*
-// StarView component with NaN check
 struct StarView: View {
-    var rating: Double {
-        didSet {
-            if rating.isNaN || rating.isInfinite {
-                rating = 0 // Ensure the rating is valid
-            }
-        }
-    }
+    var rating: Double
 
     var body: some View {
         HStack {
             ForEach(0..<5) { index in
                 Image(systemName: starType(index: index))
-                    .foregroundColor(index < Int(rating) ? .yellow : .gray)
+                    .foregroundColor(index < Int(ceil(rating)) ? .red : .gray)
             }
         }
     }
     
     private func starType(index: Int) -> String {
-        if Double(index) < rating {
-            return index + 1 <= Int(rating) ? "star.fill" : "star.leadinghalf.fill"
+        if Double(index) < rating - 0.5 {
+            return "star.fill"
+        } else if Double(index) < rating && rating - Double(index) >= 0.5 {
+            return "star.leadinghalf.fill"
         } else {
             return "star"
         }
     }
 }
 
-struct ContentView_Previews: PreviewProvider {
+struct StarView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().environmentObject(ViewModel())
+        StarView(rating: 3.5)
     }
 }
-*/
 
+struct BeforeAfterImageView: View {
+    @Binding var selectedImageType: ContentView.ImageType?
+    @ObservedObject var viewModel: ViewModelImages
 
+    @State private var showImagePicker = false
 
+    var body: some View {
+        VStack {
+            // Display the selected image
+            if selectedImageType == .before, let beforeImage = viewModel.beforeImage {
+                VStack {
+                    Text("Before Image:")
+                    Image(uiImage: beforeImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 200)
+                }
+            } else if selectedImageType == .after, let afterImage = viewModel.afterImage {
+                VStack {
+                    Text("After Image:")
+                    Image(uiImage: afterImage)
+                        .resizable()
+                        .scaledToFit()
+                        .frame(height: 200)
+                }
+            }
+
+            Spacer()
+
+            // Camera Button to capture a new image
+            Button(action: {
+                showImagePicker = true
+            }) {
+                Image(systemName: "camera")
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                    .padding()
+                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(8)
+            }
+
+            Spacer()
+
+            // Save and Cancel buttons
+            HStack {
+                Button(action: {
+                    if selectedImageType == .before {
+                        viewModel.uploadBeforeImage()
+                    } else if selectedImageType == .after {
+                        viewModel.uploadAfterImage()
+                    }
+                    selectedImageType = nil // Close the view after saving
+                }) {
+                    Text("SAVE")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.green)
+                        .cornerRadius(8)
+                }
+
+                Button(action: {
+                    if selectedImageType == .before {
+                        viewModel.beforeImage = nil
+                    } else if selectedImageType == .after {
+                        viewModel.afterImage = nil
+                    }
+                    selectedImageType = nil // Close the view after cancelling
+                }) {
+                    Text("CANCEL")
+                        .font(.headline)
+                        .foregroundColor(.white)
+                        .padding()
+                        .background(Color.red)
+                        .cornerRadius(8)
+                }
+            }
+            .padding()
+        }
+        .sheet(isPresented: $showImagePicker) {
+            ImagePicker(
+                selectedImage: selectedImageType == .before ? $viewModel.beforeImage : $viewModel.afterImage,
+                isPresented: $showImagePicker
+            )
+        }
+    }
+}
 

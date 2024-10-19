@@ -1,20 +1,3 @@
-//
-// Copyright © 2024 bundle LCTO -14
-/*
- VM.swift
- LCTO-14
- See DT/LCTO-14.txt
-
-  Created by thomasperez on 4/17/24. | Swift 5. in toplevel LCTO-14 /LCTO-14.xcodeproj/Build_settings/Swift_compiler_Lang/..ver
-  For future customer updates/downloads fr AppStore, check their OS version vs my deployment target:
-
- DEVELOPED BY THOMAS EPHRAIM PEREZ APRIL 2024
- Other Ap = pass to sim
- Record_Type = ProductComment
- Can't use exclamation points on comments
-
-*/
-
 import Foundation
 import CloudKit
 import SwiftUI
@@ -27,18 +10,15 @@ final class ViewModel: ObservableObject {
     @Published var searchResults: [String] = []
     @Published var searchMessage: String = ""
     @Published var averageRating: Double = 0.0
+    @Published var hasSearched: Bool = false
     
-
     private var database: CKDatabase {
-//        return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase //Cnanged 9-16-24)1500
         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-142").publicCloudDatabase
     }
 
-    
     func postComment(productName: String, comment: String, rating: String) {
-        // Regular expression to match all types of apostrophes, periods, and hyphens
         let sanitizedProductName = productName.replacingOccurrences(
-            of: "[\\u0027\\u2019\\.\\-]", // Matches straight and curly apostrophes, periods, and hyphens
+            of: "[\\u0027\\u2019\\.\\-]",
             with: "",
             options: .regularExpression,
             range: nil
@@ -54,7 +34,7 @@ final class ViewModel: ObservableObject {
                 if let error = error {
                     self?.handleError(error)
                 } else {
-                    print("Product, Comment, and # Stars posted OK!")
+                    print("Product, Comment, and # Stars posted successfully!")
                     self?.userInput = ""
                     self?.userInput2 = ""
                     self?.userInput4 = ""
@@ -62,207 +42,145 @@ final class ViewModel: ObservableObject {
             }
         }
     }
-// comments
- 
-    
-    
-    
-    
-    
-    
-    // Validate that a string contains only allowed ASCII characters (excluding apostrophes, periods, and hyphens)
-    func isValidASCIIWithoutSpecialChars(_ input: String) -> Bool {
-        // Define the allowed ASCII characters excluding apostrophes, periods, and hyphens
-        let allowedCharacters = CharacterSet(charactersIn: "\u{0020}"..."\u{007E}")
-            .subtracting(CharacterSet(charactersIn: "'-."))
-        
-        // Return true if the input string contains only allowed characters
-        return input.rangeOfCharacter(from: allowedCharacters.inverted) == nil
-    }
 
-    // Remove any character that is not in the allowed ASCII set
-    func sanitizeToValidASCII(_ input: String) -> String {
-        // Define the allowed ASCII characters excluding apostrophes, periods, and hyphens
-        let allowedCharacters = CharacterSet(charactersIn: "\u{0020}"..."\u{007E}")
-            .subtracting(CharacterSet(charactersIn: "'-."))
-        
-        // Filter out any character not in the allowed ASCII set
-        return input.unicodeScalars.filter { allowedCharacters.contains($0) }.map(String.init).joined()
-    }
-
-    
-    
-    
-    
-    
-    
-// HELP ME END APOSTROPHES CGPT       HELP ME END APOSTROPHES CGPT                         HELP ME END APOSTROPHES CGPT
     func fetchProductNames(searchTerm: String) {
         guard !searchTerm.isEmpty else {
             self.searchResults = []
-            self.searchMessage = "Please enter a search term."
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                self.searchMessage = ""
-            }
+            self.searchMessage = ""  // Make sure the message is cleared when input is empty
+            self.hasSearched = false
             return
         }
 
-        // Remove apostrophes from the search term
+        self.hasSearched = true
         let normalizedSearchTerm = searchTerm.replacingOccurrences(of: "'", with: "")
         var allComments: [String] = []
 
-        func fetchAllRecords(with cursor: CKQueryOperation.Cursor? = nil) {
-            let operation: CKQueryOperation
-            
-            if let cursor = cursor {
-                operation = CKQueryOperation(cursor: cursor) // Continue fetching with the cursor
-            } else {
-                let predicate = NSPredicate(value: true) // Fetch all records
-                let query = CKQuery(recordType: "ProductComment", predicate: predicate)
-                operation = CKQueryOperation(query: query)
-            }
+        fetchAllRecords(with: nil, searchTerm: normalizedSearchTerm, allComments: &allComments)
+    }
 
-            // Replace deprecated recordFetchedBlock with recordMatchedBlock
-            operation.recordMatchedBlock = { recordID, result in
-                switch result {
-                case .success(let record):
-                    if let productName = record["productName"] as? String,
-                       let comment = record["comment"] as? String {
-                        // Remove apostrophes from product name for comparison
-                        let normalizedProductName = productName.replacingOccurrences(of: "'", with: "")
-                        if normalizedProductName.range(of: normalizedSearchTerm, options: .caseInsensitive) != nil {
-                            allComments.append(comment)
-                        }
-                    }
-                    
-                    // Fetch and log the stars for each product
-                    if let stars = record["Stars"] as? Int {
-                        print("Fetched record with name: \(record["productName"] as? String ?? "Unknown"), Stars: \(stars)")
-                    } else {
-                        print("Fetched record with name: \(record["productName"] as? String ?? "Unknown"), but no Stars found.")
-                    }
-                    
-                case .failure(let error):
-                    print("Error fetching record with ID \(recordID): \(error)")
-                }
-            }
 
-            // Use queryResultBlock with the Result type
-            operation.queryResultBlock = { [weak self] (result: Result<CKQueryOperation.Cursor?, Error>) in
-                switch result {
-                case .success(let cursor):
-                    if let cursor = cursor {
-                        fetchAllRecords(with: cursor) // Fetch the next page
-                    } else {
-                        // No more records, update the UI on the main thread
-                        DispatchQueue.main.async {
-                            print("Comments found: \(allComments)")
-                            print("All records fetched: \(allComments.count) comments")
-                            self?.searchResults = allComments
-                            if self?.searchResults.isEmpty == true {
-                                self?.searchMessage = "No results found"
-                            } else {
-                                self?.searchMessage = ""
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                        print("Search error: \(error.localizedDescription)")
-                        self?.searchResults = []
-                    }
-                }
-            }
 
-            database.add(operation)
+
+    private func fetchAllRecords(with cursor: CKQueryOperation.Cursor?, searchTerm: String, allComments: inout [String]) {
+        var mutableComments = allComments
+
+        let operation: CKQueryOperation
+
+        if let cursor = cursor {
+            operation = CKQueryOperation(cursor: cursor)
+        } else {
+            let predicate = NSPredicate(value: true)
+            let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+            operation = CKQueryOperation(query: query)
         }
 
-        // Start fetching records
-        fetchAllRecords()
+        operation.recordMatchedBlock = { recordID, result in
+            switch result {
+            case .success(let record):
+                if let productName = record["productName"] as? String,
+                   let comment = record["comment"] as? String {
+                    let normalizedProductName = productName.replacingOccurrences(of: "'", with: "")
+                    if normalizedProductName.range(of: searchTerm, options: .caseInsensitive) != nil {
+                        mutableComments.append(comment)
+                    }
+                }
+            case .failure(let error):
+                print("Error fetching record with ID \(recordID): \(error)")
+            }
+        }
+
+        operation.queryResultBlock = { [weak self] result in
+            switch result {
+            case .success(let cursor):
+                if let cursor = cursor {
+                    print("Fetching next page of records...")
+                    self?.fetchAllRecords(with: cursor, searchTerm: searchTerm, allComments: &mutableComments)
+                } else {
+                    DispatchQueue.main.async {
+                        self?.searchResults = mutableComments
+                        self?.searchMessage = mutableComments.isEmpty ? "No results found" : ""
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    print("Search error: \(error.localizedDescription)")
+                    self?.searchResults = []
+                    self?.searchMessage = "Error fetching results. Please try again."
+                }
+            }
+        }
+
+        database.add(operation)
     }
-    //          --------------->        // : ) KEEP THIS SINCE 165 RECORDS WERE INDEED FETCHED : )
-    //          --------------->        // : ) KEEP THIS SINCE 165 RECORDS WERE INDEED FETCHED : )
-    
-    
-    
-    
+
     func calculateAverageRating(for productName: String) {
         guard !productName.isEmpty else {
             self.averageRating = 0
             return
         }
 
-        // Remove apostrophes from the product name entered by the user
         let normalizedProductName = productName.replacingOccurrences(of: "'", with: "")
-
         var allStars: [Int] = []
 
-        // Function to fetch all records with pagination
-        func fetchAllRecords(with cursor: CKQueryOperation.Cursor? = nil) {
-            let operation: CKQueryOperation
-            
-            if let cursor = cursor {
-                operation = CKQueryOperation(cursor: cursor) // Continue fetching with the cursor
-            } else {
-                let predicate = NSPredicate(value: true) // Fetch all records
-                let query = CKQuery(recordType: "ProductComment", predicate: predicate)
-                operation = CKQueryOperation(query: query)
-            }
+        fetchAllRatings(with: nil, productName: normalizedProductName, allStars: &allStars)
+    }
 
-            operation.recordMatchedBlock = { recordID, result in
-                switch result {
-                case .success(let record):
-                    if let name = record["productName"] as? String {
-                        // Remove apostrophes from the product name in the fetched record
-                        let normalizedRecordProductName = name.replacingOccurrences(of: "'", with: "")
-                        if normalizedRecordProductName.range(of: normalizedProductName, options: .caseInsensitive) != nil {
-                            if let stars = record["Stars"] as? Int {
-                                allStars.append(stars)
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    print("Failed to fetch record \(recordID): \(error)")
-                }
-            }
+    private func fetchAllRatings(with cursor: CKQueryOperation.Cursor?, productName: String, allStars: inout [Int]) {
+        var mutableStars = allStars
 
-            operation.queryResultBlock = { [weak self] result in
-                switch result {
-                case .success(let cursor):
-                    if let cursor = cursor {
-                        // Fetch the next page
-                        fetchAllRecords(with: cursor)
-                    } else {
-                        // No more records, calculate the average
-                        DispatchQueue.main.async {
-                            if !allStars.isEmpty {
-                                let total = allStars.reduce(0, +)
-                                let average = Double(total) / Double(allStars.count)
-                                self?.averageRating = average
-                            } else {
-                                self?.averageRating = 0
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                        self?.searchMessage = "Failed to fetch stars: \(error.localizedDescription)"
-                        self?.averageRating = 0
-                    }
-                }
-            }
+        let operation: CKQueryOperation
 
-            database.add(operation)
+        if let cursor = cursor {
+            operation = CKQueryOperation(cursor: cursor)
+        } else {
+            let predicate = NSPredicate(value: true)
+            let query = CKQuery(recordType: "ProductComment", predicate: predicate)
+            operation = CKQueryOperation(query: query)
         }
 
-        // Start fetching records
-        fetchAllRecords()
-    }
-    // func calc
+        operation.recordMatchedBlock = { recordID, result in
+            switch result {
+            case .success(let record):
+                if let name = record["productName"] as? String {
+                    let normalizedRecordProductName = name.replacingOccurrences(of: "'", with: "")
+                    if normalizedRecordProductName.range(of: productName, options: .caseInsensitive) != nil {
+                        if let stars = record["Stars"] as? Int {
+                            mutableStars.append(stars)
+                        }
+                    }
+                }
+            case .failure(let error):
+                print("Failed to fetch record \(recordID): \(error)")
+            }
+        }
 
-//  HELP ME END APOSTROPHES CGPT       HELP ME END APOSTROPHES CGPT                        HELP ME END APOSTROPHES CGPT
- 
-    
+        operation.queryResultBlock = { [weak self] result in
+            switch result {
+            case .success(let cursor):
+                if let cursor = cursor {
+                    self?.fetchAllRatings(with: cursor, productName: productName, allStars: &mutableStars)
+                } else {
+                    DispatchQueue.main.async {
+                        if !mutableStars.isEmpty {
+                            let total = mutableStars.reduce(0, +)
+                            let average = Double(total) / Double(mutableStars.count)
+                            self?.averageRating = average
+                        } else {
+                            self?.averageRating = 0
+                        }
+                    }
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self?.searchMessage = "Failed to fetch stars: \(error.localizedDescription)"
+                    self?.averageRating = 0
+                }
+            }
+        }
+
+        database.add(operation)
+    }
+
     private func handleError(_ error: Error) {
         guard let ckError = error as? CKError else {
             print("Error: \(error.localizedDescription)")
@@ -271,229 +189,9 @@ final class ViewModel: ObservableObject {
 
         switch ckError.code {
         case .networkUnavailable, .networkFailure:
-            print("\nNetwork error: Please check your internet connection.")
+            print("Network error: Please check your internet connection.")
         default:
-            print("\nUnhandled error: \(ckError.localizedDescription)")
-        }
-    }
-} // final class ViewModel
-
-
-
-struct StarView: View {
-    var rating: Double
-
-    var body: some View {
-        HStack {
-            ForEach(0..<5) { index in
-                Image(systemName: starType(index: index))
-                    .foregroundColor(index < Int(ceil(rating)) ? .red : .gray) // Adjust color for full and half stars
-            }
-        }
-    }
-    
-    private func starType(index: Int) -> String {
-        if Double(index) < rating - 0.5 { // Full stars
-            return "star.fill"
-        } else if Double(index) < rating && rating - Double(index) >= 0.5 { // Half star case
-            return "star.leadinghalf.fill"
-        } else { // Empty stars
-            return "star"
+            print("Unhandled error: \(ckError.localizedDescription)")
         }
     }
 }
-// Starview
-
-
-struct StarView_Previews: PreviewProvider {
-    static var previews: some View {
-        StarView(rating: 3.5)
-    }
-}
-
-
-
-
-
-
-
-
-/*    O BIG CHG   CASE-SENSITIVIY OK TODO; APOSTROPHES     9-19-24)1930          O BIG CHG   CASE-SENSITIVITY OK TODO; APOSTROPHES
- import Foundation
- import CloudKit
- import SwiftUI
-
- final class ViewModel: ObservableObject {
-     @Published var userInput: String = ""
-     @Published var userInput2: String = ""
-     @Published var userInput3: String = ""
-     @Published var userInput4: String = ""
-     @Published var searchResults: [String] = []
-     @Published var searchMessage: String = ""
-     @Published var averageRating: Double = 0.0
-
-     private var database: CKDatabase {
- //        return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-14").publicCloudDatabase //Cnanged 9-16-24)1500
-         return CKContainer(identifier: "iCloud.com.tomEphraimPerez.LCTO-142").publicCloudDatabase
-     }
-
-     func postComment(productName: String, comment: String, rating: String) {
-         let record = CKRecord(recordType: "ProductComment")
-         record["productName"] = productName
-         record["comment"] = comment
-         record["Stars"] = Int(rating) ?? 0
-         
-         database.save(record) { [weak self] _, error in
-             DispatchQueue.main.async {
-                 if let error = error {
-                     self?.handleError(error)
-                 } else {
-                     print("Product, Comment, and # Stars posted OK!")
-                     self?.userInput = ""
-                     self?.userInput2 = ""
-                     self?.userInput4 = ""
-                 }
-             }
-         }
-     }
-     
- 
- 
- // HELP ME END APOSTROPHES CGPT       HELP ME END APOSTROPHES CGPT                         HELP ME END APOSTROPHES CGPT
-     func fetchProductNames(searchTerm: String) {
-         guard !searchTerm.isEmpty else {
-             self.searchResults = []
-             self.searchMessage = "Please enter a search term."
-             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-                 self.searchMessage = ""
-             }
-             return
-         }
-
-         let predicate = NSPredicate(value: true) // Fetch all records
-         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
-         print("Performing query with search term: \(searchTerm)")
-
-         database.perform(query, inZoneWith: nil) { [weak self] records, error in
-             DispatchQueue.main.async {
-                 if let error = error {
-                     print("Search error: \(error.localizedDescription)")
-                     self?.searchResults = []
-                 } else {
-                     guard let records = records else {
-                         print("No records fetched.")
-                         self?.searchResults = []
-                         return
-                     }
-                     print("Records fetched: \(records.count)")
-                     
-                     // Perform case-insensitive filtering on the client side
-                     let comments = records.compactMap { record -> String? in
-                         if let productName = record["productName"] as? String,
-                            let comment = record["comment"] as? String,
-                            productName.range(of: searchTerm, options: .caseInsensitive) != nil {
-                             return comment
-                         }
-                         return nil
-                     }
-                     
-                     print("Comments found: \(comments)")
-                     self?.searchResults = comments
-                     print("Search complete. Found: \(self?.searchResults ?? [])")
-                     
-                     if self?.searchResults.isEmpty == true {
-                         self?.searchMessage = "No results found"
-                     } else {
-                         self?.searchMessage = ""
-                     }
-                 }
-             }
-         }
-     }  // func fetch
-
-     func calculateAverageRating(for productName: String) {
-         let predicate = NSPredicate(value: true) // Fetch all records
-         let query = CKQuery(recordType: "ProductComment", predicate: predicate)
-
-         database.perform(query, inZoneWith: nil) { [weak self] records, error in
-             DispatchQueue.main.async {
-                 if let error = error {
-                     self?.searchMessage = "Failed to fetch stars: \(error.localizedDescription)"
-                     self?.averageRating = 0
-                 } else {
-                     // Filter records locally for case-insensitive match
-                     let stars = records?.compactMap { record -> Int? in
-                         if let name = record["productName"] as? String,
-                            name.range(of: productName, options: .caseInsensitive) != nil {
-                             return record["Stars"] as? Int
-                         }
-                         return nil
-                     } ?? []
-
-                     if !stars.isEmpty {
-                         let total = stars.reduce(0, +)
-                         let average = Double(total) / Double(stars.count)
-                         self?.averageRating = average
-                     } else {
-                         self?.averageRating = 0
-                     }
-                 }
-             }
-         }
-     }
- //  HELP ME END APOSTROPHES CGPT       HELP ME END APOSTROPHES CGPT  9-19-24)1930      HELP ME END APOSTROPHES CGPT
-     
- 
- 
-     private func handleError(_ error: Error) {
-         guard let ckError = error as? CKError else {
-             print("Error: \(error.localizedDescription)")
-             return
-         }
-
-         switch ckError.code {
-         case .networkUnavailable, .networkFailure:
-             print("\nNetwork error: Please check your internet connection.")
-         default:
-             print("\nUnhandled error: \(ckError.localizedDescription)")
-         }
-     }
- }
-
- struct StarView: View {
-     var rating: Double
-
-     var body: some View {
-         HStack {
-             ForEach(0..<5) { index in
-                 Image(systemName: starType(index: index))
-                     .foregroundColor(index < Int(rating) ? .red : .gray)     // O = .yellow
-             }
-         }
-     }
-     
-     private func starType(index: Int) -> String {
-         if Double(index) < rating {
-             return index + 1 <= Int(rating) ? "star.fill" : "star.leadinghalf.fill"
-         } else {
-             return "star"
-         }
-     }
- }
-
- struct StarView_Previews: PreviewProvider {
-     static var previews: some View {
-         StarView(rating: 3.5)
-     }
- }
- 
- END        O BIG CHG   CASE-SENSITIVITY OK TODO; APOSTROPHES    9-19-24)1818      O BIG CHG   CASE-SENSITIVIY OK TODO; APOSTROPHES
- */
-
-/*
- Format specifiers:
- %d - int Value
- %f - float value
- %ld - long value
- %@ - string value and for many more.
- */
